@@ -8,3 +8,13 @@ C:\Users\dhaggerty\Documents\photolog\photolog\obj\Debug\photolog.csproj.Generat
 C:\Users\dhaggerty\Documents\photolog\photolog\obj\Debug\photolog.csproj.CoreCompileInputs.cache
 C:\Users\dhaggerty\Documents\photolog\photolog\obj\Debug\photolog.exe
 C:\Users\dhaggerty\Documents\photolog\photolog\obj\Debug\photolog.pdb
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\bin\Debug\photolog.exe.config
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\bin\Debug\photolog.exe
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\bin\Debug\photolog.pdb
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.csprojAssemblyReference.cache
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.Form1.resources
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.Properties.Resources.resources
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.csproj.GenerateResource.cache
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.csproj.CoreCompileInputs.cache
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.exe
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\Debug\photolog.pdb

@@ -36,9 +36,9 @@
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
             this.publishButton = new System.Windows.Forms.Button();
-            this.listView3 = new System.Windows.Forms.ListView();
-            this.clearTextButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.addDGButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,6 +52,7 @@
             // 
             // ClearButton
             // 
+            this.ClearButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ClearButton.Location = new System.Drawing.Point(283, 7);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(90, 23);
@@ -64,12 +65,13 @@
             // 
             this.listView2.Location = new System.Drawing.Point(283, 36);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(140, 591);
+            this.listView2.Size = new System.Drawing.Size(196, 591);
             this.listView2.TabIndex = 4;
             this.listView2.UseCompatibleStateImageBehavior = false;
             // 
             // buttonOpenFolder
             // 
+            this.buttonOpenFolder.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonOpenFolder.Location = new System.Drawing.Point(12, 7);
             this.buttonOpenFolder.Name = "buttonOpenFolder";
             this.buttonOpenFolder.Size = new System.Drawing.Size(75, 23);
@@ -80,6 +82,7 @@
             // 
             // addButton
             // 
+            this.addButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.addButton.Location = new System.Drawing.Point(208, 36);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(59, 23);
@@ -90,6 +93,7 @@
             // 
             // removeButton
             // 
+            this.removeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.removeButton.Location = new System.Drawing.Point(208, 75);
             this.removeButton.Name = "removeButton";
             this.removeButton.Size = new System.Drawing.Size(59, 23);
@@ -100,47 +104,46 @@
             // 
             // publishButton
             // 
-            this.publishButton.Location = new System.Drawing.Point(209, 177);
+            this.publishButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.publishButton.Location = new System.Drawing.Point(208, 363);
             this.publishButton.Name = "publishButton";
             this.publishButton.Size = new System.Drawing.Size(58, 23);
             this.publishButton.TabIndex = 8;
             this.publishButton.Text = "Publish";
             this.publishButton.UseVisualStyleBackColor = true;
             // 
-            // listView3
-            // 
-            this.listView3.Location = new System.Drawing.Point(729, 36);
-            this.listView3.Name = "listView3";
-            this.listView3.Size = new System.Drawing.Size(202, 591);
-            this.listView3.TabIndex = 9;
-            this.listView3.UseCompatibleStateImageBehavior = false;
-            // 
-            // clearTextButton
-            // 
-            this.clearTextButton.Location = new System.Drawing.Point(729, 7);
-            this.clearTextButton.Name = "clearTextButton";
-            this.clearTextButton.Size = new System.Drawing.Size(110, 23);
-            this.clearTextButton.TabIndex = 10;
-            this.clearTextButton.Text = "Clear All Text";
-            this.clearTextButton.UseVisualStyleBackColor = true;
-            this.clearTextButton.Click += new System.EventHandler(this.clearTextButton_Click);
-            // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(430, 36);
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1});
+            this.dataGridView1.Location = new System.Drawing.Point(501, 36);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(293, 591);
+            this.dataGridView1.Size = new System.Drawing.Size(439, 591);
             this.dataGridView1.TabIndex = 11;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Column1";
+            this.Column1.Name = "Column1";
+            // 
+            // addDGButton
+            // 
+            this.addDGButton.Location = new System.Drawing.Point(200, 196);
+            this.addDGButton.Name = "addDGButton";
+            this.addDGButton.Size = new System.Drawing.Size(75, 23);
+            this.addDGButton.TabIndex = 12;
+            this.addDGButton.Text = "Add DG";
+            this.addDGButton.UseVisualStyleBackColor = true;
+            this.addDGButton.Click += new System.EventHandler(this.addDGButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(969, 639);
+            this.Controls.Add(this.addDGButton);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.clearTextButton);
-            this.Controls.Add(this.listView3);
             this.Controls.Add(this.publishButton);
             this.Controls.Add(this.removeButton);
             this.Controls.Add(this.addButton);
@@ -149,7 +152,7 @@
             this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.listView1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Photo Log";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
@@ -166,9 +169,9 @@
         private System.Windows.Forms.Button addButton;
         private System.Windows.Forms.Button removeButton;
         private System.Windows.Forms.Button publishButton;
-        private System.Windows.Forms.ListView listView3;
-        private System.Windows.Forms.Button clearTextButton;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewImageColumn Column1;
+        private System.Windows.Forms.Button addDGButton;
     }
 }
 
