@@ -18,43 +18,23 @@ namespace photolog
             InitializeComponent();
         }
 
+     
+        // Set Form listView and datGridView properties on load
         private void Form1_Load(object sender, EventArgs e)
         {
             // listView1 PROPERTIES... Details, List, Tiles
-            //listView1.View = View.Details;
             listView1.View = View.Details;
             listView1.Columns.Add("listView1 Column1", 150);
             listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
 
-            // listView2 PROPERTIES... Details, List, Tiles
-            listView2.View = View.Details;
-            listView2.Columns.Add("listView2 Column1", 150);
-            listView2.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
-
             // DataGridView
-            //DataGridViewImageColumn dgvImage = new DataGridViewImageColumn();
-            //dgvImage.HeaderText = "Image";
-            //dgvImage.ImageLayout = DataGridViewImageCellLayout.Stretch;
-
-
-            //DataGridViewTextBoxColumn dgvId = new DataGridViewTextBoxColumn();
-            //dgvId.HeaderText = "Id";
-
-            //dataGridView1.Columns.Add(dgvImage);
-            //dataGridView1.Columns.Add(dgvId);
-
-            //dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            //dataGridView1.RowTemplate.Height = 120;
-
+            dataGridView1.RowTemplate.Height = 100;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             //dataGridView1.AllowUserToAddRows = false;
         }
 
-        private void ClearButton_Click(object sender, EventArgs e)
-        {
-            listView2.Items.Clear();
-            dataGridView1.Columns.Clear();
-        }
 
+        // Open folder of photos button
         private void buttonOpenFolder_Click(object sender, EventArgs e)
         {
             // create instance of folderBrowserDialog class
@@ -72,7 +52,6 @@ namespace photolog
             ImageList imgList1 = new ImageList();
             imgList1.ImageSize = new Size(100, 100);
             listView1.SmallImageList = imgList1;
-            listView2.SmallImageList = imgList1;
 
             string[] files = Directory.GetFiles(fbd.SelectedPath);
             for (int i = 0; i < files.Length; i++)
@@ -84,41 +63,8 @@ namespace photolog
             }
         }
 
-        // METHOD - Move selected items from one List to another.
-        private void CopySelectedItems(ListView source, ListView target)
-        {
-            foreach (ListViewItem item in source.SelectedItems)
-            {
-                target.Items.Add((ListViewItem)item.Clone());
-            }
-        }
 
-        //METHOD - Move selected items from one List to dataGrid.
-        // https://stackoverflow.com/questions/28747413/retrieving-selected-image-only-from-listview
-        private void CopySelectedItemsToGrid(ListView source, DataGridView target)
-        {
-            foreach (ListViewItem item in source.SelectedItems)
-            {
-               
-                target.Rows.Add((ListViewItem)item.Clone());
-            }
-        }
-
-        private void addButton_Click(object sender, EventArgs e)
-        {
-            CopySelectedItems(listView1, listView2);
-            //CopySelectedItemsToGrid(listView1, dataGridView1);
-
-        }
-
-        private void removeButton_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem eachItem in listView2.SelectedItems)
-            {
-                listView2.Items.Remove(eachItem);
-            }
-        }
-
+        // METHOD - Move selected items from listView to dataGridView
         private void list_img_SelectedIndexChanged(ListView source, DataGridView target)
         {
             if (listView1.SelectedItems.Count > 0)
@@ -129,14 +75,25 @@ namespace photolog
                 //f.pictureBox1.Image = img;
                 //MessageBox.Show("pause");
                 //f.Show();
-                dataGridView1.Rows.Add(img);
+                dataGridView1.Rows.Add(img, "Insert Caption Here");
             }
         }
-
+        
+        
+        // BUTTON - Move selected items from listView to dataGridView
         private void addDGButton_Click(object sender, EventArgs e)
         {
             list_img_SelectedIndexChanged(listView1, dataGridView1);
         }
+
+
+        // BUTTON - remove selected row from dataGridView
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+
+            dataGridView1.Rows.Clear();
+        }
+
     }
 }
 
