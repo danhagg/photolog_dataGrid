@@ -32,11 +32,11 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.buttonOpenFolder = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
-            this.publishButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.columnImage = new System.Windows.Forms.DataGridViewImageColumn();
             this.columnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addDGButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -68,16 +68,6 @@
             this.removeButton.TabIndex = 7;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
-            // 
-            // publishButton
-            // 
-            this.publishButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.publishButton.Location = new System.Drawing.Point(295, 364);
-            this.publishButton.Name = "publishButton";
-            this.publishButton.Size = new System.Drawing.Size(58, 23);
-            this.publishButton.TabIndex = 8;
-            this.publishButton.Text = "Publish";
-            this.publishButton.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
@@ -111,14 +101,24 @@
             this.addDGButton.UseVisualStyleBackColor = true;
             this.addDGButton.Click += new System.EventHandler(this.addDGButton_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(291, 222);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "Publish";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1041, 639);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.addDGButton);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.publishButton);
             this.Controls.Add(this.removeButton);
             this.Controls.Add(this.buttonOpenFolder);
             this.Controls.Add(this.listView1);
@@ -136,11 +136,11 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button buttonOpenFolder;
         private System.Windows.Forms.Button removeButton;
-        private System.Windows.Forms.Button publishButton;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button addDGButton;
         private System.Windows.Forms.DataGridViewImageColumn columnImage;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnText;
+        private System.Windows.Forms.Button button1;
     }
 }
 
