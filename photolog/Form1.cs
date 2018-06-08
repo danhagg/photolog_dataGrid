@@ -30,9 +30,8 @@ namespace photolog
             dataGridView1.AllowUserToAddRows = false;
         }
 
-
-        // Open folder of photos button
-        private void buttonOpenFolder_Click(object sender, EventArgs e)
+        // BUTTON - Open Folder
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create instance of folderBrowserDialog class
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -118,13 +117,6 @@ namespace photolog
         {
             if (DGV.Rows.Count != 0)
             {
-                int RowCount = DGV.Rows.Count;
-                int ColumnCount = DGV.Columns.Count;
-                Console.WriteLine("Row count {0}", RowCount.ToString());
-                Console.WriteLine("Col count {0}", ColumnCount.ToString());
-                Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
-
-
                 //Create a missing variable for missing value
                 object oMissing = Missing.Value;
                 // \endofdoc is a predefined bookmark
@@ -139,58 +131,94 @@ namespace photolog
                 ref oMissing, ref oMissing);
 
 
-                //iterate over dataGridView
-                int r = 0;
-                for (int c = 0; c <= ColumnCount - 1; c++)
+                //////iterate over dataGridView
+                //int c = 0;
+                //for (int r = 0; r <= RowCount - 1; r++)
+                //{
+                //    for (c = 0; c <= ColumnCount - 1; c++)
+                //    {
+                //        DataArray[r, c] = DGV.Rows[r].Cells[c].Value;
+                //        Console.WriteLine(DataArray[r, c]);
+                //    } //end row loop
+                //} //end column loop
+
+                int RowCount = DGV.Rows.Count;
+                int ColumnCount = DGV.Columns.Count;
+                Console.WriteLine("Row count {0}", RowCount.ToString());
+                Console.WriteLine("Col count {0}", ColumnCount.ToString());
+
+
+
+
+                for (int i = 0; i <= RowCount - 1; i++)
                 {
-                    for (r = 0; r <= RowCount - 1; r++)
-                    {
-                        DataArray[r, c] = DGV.Rows[r].Cells[c].Value;
-                        Console.WriteLine(DataArray[r, c]);
-                    } //end row loop
-                } //end column loop
+                    //Console.WriteLine(DGV[2, i]);
+                    Console.WriteLine(DGV.Rows[i].Cells[2].Value);
+                    Word.Paragraph oPara;
+                    oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    //string fileName1 = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
+                    string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
+                    object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+                    oPara = oDoc.Content.Paragraphs.Add(ref oRngP);
+                    oPara.Range.Text = "Heading 2";
+                    oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
+                    oPara.Format.SpaceAfter = 6;
+                    oPara.Range.InsertParagraphAfter();
+                    oPara.Range.Text = "mispellingk";
+                }
 
 
+                //// iterate over each row of dataGrid and extract caption + image path
+                //Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
+                //int DGV_col = 0;
+                //for (int DGV_row = 0; DGV_row <= RowCount - 1; DGV_row++)
+                //{
+                //    for (DGV_col = 0; DGV_col <= ColumnCount - 1; DGV_col++)
+                //    {
+                //        DataArray[DGV_row, DGV_col] = DGV.Rows[DGV_row].Cells[DGV_col].Value;
+                //        Console.WriteLine(DataArray[DGV_row, DGV_col]);
+                //    } //end row loop
+                //} //end column loop
+
+                //Console.WriteLine(DataArray.Length);
+
+                //string imagePath = "";
+
+                ////Insert a paragraph at the beginning of the document.
+                //Word.Paragraph oPara1;
+                //oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
+                ////oPara1.Range.Text = ;
+                //oPara1.Range.Text = "Heading 1";
+                //oPara1.Format.SpaceAfter = 24;    //24 pt spacing after paragraph.
+                //oPara1.Range.InsertParagraphAfter();
+
+                //Object oMissed = oDoc.Paragraphs[1].Range;
+                //Object oLinkToFile = false;
+                //Object oSaveWithDocument = true;
+                ////string fileName1 = @"C:\Users\dhaggerty\Desktop\images\cockrell.jpg";
+                ////oDoc.InlineShapes.AddPicture(fileName1, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
+                //Word.Paragraph oText;
+                //oText = oDoc.Content.Paragraphs.Add(ref oMissing);
+                //oText.Range.Text = "mispellingk";
 
 
-
-
-
-                //Insert a paragraph at the beginning of the document.
-                Word.Paragraph oPara1;
-                oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
-                oPara1.Range.Text = "Heading 1";
-                oPara1.Range.Font.Bold = 1;
-                oPara1.Format.SpaceAfter = 24;    //24 pt spacing after paragraph.
-                oPara1.Range.InsertParagraphAfter();
-
-                Object oMissed = oDoc.Paragraphs[1].Range;
-                Object oLinkToFile = false;
-                Object oSaveWithDocument = true;
-                //string fileName1 = @"C:\Users\dhaggerty\Desktop\images\cockrell.jpg";
-                //oDoc.InlineShapes.AddPicture(fileName1, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
-                Word.Paragraph oText;
-                oText = oDoc.Content.Paragraphs.Add(ref oMissing);
-                oText.Range.Text = "mispellingk";
-
-
-                Word.Paragraph oParaPic;
-                oParaPic = oDoc.Content.Paragraphs.Add(ref oMissing);
-                //ReplaceWordStub("{ILL}", dataGridView1.CurrentRow.Cells[3].Value.ToString(), wordDocument);
-                //.Image.Save(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                string fileName = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
-                //oDoc.InlineShapes.AddPicture(fileName, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
+                //Word.Paragraph oParaPic;
+                //oParaPic = oDoc.Content.Paragraphs.Add(ref oMissing);
+                ////ReplaceWordStub("{ILL}", dataGridView1.CurrentRow.Cells[3].Value.ToString(), wordDocument);
+                ////.Image.Save(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                //string fileName = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
+                ////oDoc.InlineShapes.AddPicture(fileName, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
                 
 
 
-                //Insert a paragraph at the end of the document.
-                Word.Paragraph oPara2;
-                object oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-                oPara2 = oDoc.Content.Paragraphs.Add(ref oRng);
-                oPara2.Range.Text = "Heading 2";
-                oPara2.Range.InlineShapes.AddPicture(fileName, ref oMissing, ref oMissing, ref oMissing);
-                oPara2.Format.SpaceAfter = 6;
-                oPara2.Range.InsertParagraphAfter();
+                ////Insert a paragraph at the end of the document.
+                //Word.Paragraph oPara2;
+                //object oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+                //oPara2 = oDoc.Content.Paragraphs.Add(ref oRng);
+                //oPara2.Range.Text = "Heading 2";
+                //oPara2.Range.InlineShapes.AddPicture(fileName, ref oMissing, ref oMissing, ref oMissing);
+                //oPara2.Format.SpaceAfter = 6;
+                //oPara2.Range.InsertParagraphAfter();
 
                 // Insert Page Break
 
@@ -233,6 +261,8 @@ namespace photolog
 
 
         }
+
+
 
 
 
