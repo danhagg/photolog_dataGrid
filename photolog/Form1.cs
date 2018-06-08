@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using Word = Microsoft.Office.Interop.Word;
+using Microsoft.Office.Interop.Word;
 using System.Reflection;
 
 namespace photolog
@@ -92,168 +93,145 @@ namespace photolog
         }
 
 
-        // BUTTON - This
+        // BUTTON - CreateWordDoc
         private void button3_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            //SaveFileDialog sfd = new SaveFileDialog();
 
-            sfd.Filter = "Word Documents (*.docx)|*.docx";
+            //sfd.Filter = "Word Documents (*.docx)|*.docx";
 
-            sfd.FileName = ".docx";
+            //sfd.FileName = ".docx";
 
-            if (sfd.ShowDialog() == DialogResult.OK)
+            //if (sfd.ShowDialog() == DialogResult.OK)
             {
-
-                CreateWordDoc();
+                //CreateWordDoc(dataGridView1, sfd.FileName);              
+                CreateWordDoc(dataGridView1);
+                //MessageBox.Show("Creating You Word Document \nPlease Wait!");
             }
         }
+
 
 
         // METHOD - Create the Word doc
-        private void CreateWordDoc()
+        //private void CreateWordDoc(DataGridView DGV, string filename)
+        private void CreateWordDoc(DataGridView DGV)
         {
-            object oMissing = System.Reflection.Missing.Value;
-            object oEndOfDoc = "\\endofdoc"; /* \endofdoc is a predefined bookmark */
-
-            //Start Word and create a new document.
-            Word._Application oWord;
-            Word._Document oDoc;
-            oWord = new Word.Application();
-            oWord.Visible = true;
-            oDoc = oWord.Documents.Add(ref oMissing, ref oMissing,
-            ref oMissing, ref oMissing);
-
-            //Insert a paragraph at the beginning of the document.
-            Word.Paragraph oPara1;
-            oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
-            oPara1.Range.Text = "Heading 1";
-            oPara1.Range.Font.Bold = 1;
-            oPara1.Format.SpaceAfter = 24;    //24 pt spacing after paragraph.
-            oPara1.Range.InsertParagraphAfter();
-
-            //Insert a paragraph at the end of the document.
-            Word.Paragraph oPara2;
-            object oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            oPara2 = oDoc.Content.Paragraphs.Add(ref oRng);
-            oPara2.Range.Text = "Heading 2";
-            oPara2.Format.SpaceAfter = 6;
-            oPara2.Range.InsertParagraphAfter();
-
-            //Insert another paragraph.
-            Word.Paragraph oPara3;
-            oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            oPara3 = oDoc.Content.Paragraphs.Add(ref oRng);
-            oPara3.Range.Text = "This is a sentence of normal text. Now here is a table:";
-            oPara3.Range.Font.Bold = 0;
-            oPara3.Format.SpaceAfter = 24;
-            oPara3.Range.InsertParagraphAfter();
-
-            //Insert a 3 x 5 table, fill it with data, and make the first row
-            //bold and italic.
-            Word.Table oTable;
-            Word.Range wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            oTable = oDoc.Tables.Add(wrdRng, 3, 5, ref oMissing, ref oMissing);
-            oTable.Range.ParagraphFormat.SpaceAfter = 6;
-            int r, c;
-            string strText;
-            for (r = 1; r <= 3; r++)
-                for (c = 1; c <= 5; c++)
-                {
-                    strText = "r" + r + "c" + c;
-                    oTable.Cell(r, c).Range.Text = strText;
-                }
-            oTable.Rows[1].Range.Font.Bold = 1;
-            oTable.Rows[1].Range.Font.Italic = 1;
-
-            //Add some text after the table.
-            Word.Paragraph oPara4;
-            oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            oPara4 = oDoc.Content.Paragraphs.Add(ref oRng);
-            oPara4.Range.InsertParagraphBefore();
-            oPara4.Range.Text = "And here's another table:";
-            oPara4.Format.SpaceAfter = 24;
-            oPara4.Range.InsertParagraphAfter();
-
-            //Insert a 5 x 2 table, fill it with data, and change the column widths.
-            wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            oTable = oDoc.Tables.Add(wrdRng, 5, 2, ref oMissing, ref oMissing);
-            oTable.Range.ParagraphFormat.SpaceAfter = 6;
-            for (r = 1; r <= 5; r++)
-                for (c = 1; c <= 2; c++)
-                {
-                    strText = "r" + r + "c" + c;
-                    oTable.Cell(r, c).Range.Text = strText;
-                }
-            oTable.Columns[1].Width = oWord.InchesToPoints(2); //Change width of columns 1 & 2
-            oTable.Columns[2].Width = oWord.InchesToPoints(3);
-
-            //Keep inserting text. When you get to 7 inches from top of the
-            //document, insert a hard page break.
-            object oPos;
-            double dPos = oWord.InchesToPoints(7);
-            oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range.InsertParagraphAfter();
-            do
+            if (DGV.Rows.Count != 0)
             {
-                wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-                wrdRng.ParagraphFormat.SpaceAfter = 6;
-                wrdRng.InsertAfter("A line of text");
-                wrdRng.InsertParagraphAfter();
-                oPos = wrdRng.get_Information
-                                       (Word.WdInformation.wdVerticalPositionRelativeToPage);
+                int RowCount = DGV.Rows.Count;
+                int ColumnCount = DGV.Columns.Count;
+                Console.WriteLine("Row count {0}", RowCount.ToString());
+                Console.WriteLine("Col count {0}", ColumnCount.ToString());
+                Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
+
+
+                //Create a missing variable for missing value
+                object oMissing = Missing.Value;
+                // \endofdoc is a predefined bookmark
+                object oEndOfDoc = "\\endofdoc";
+
+                //Start Word and create a new document.
+                Word._Application oWord;
+                Word._Document oDoc;
+                oWord = new Word.Application();
+                oWord.Visible = true;
+                oDoc = oWord.Documents.Add(ref oMissing, ref oMissing,
+                ref oMissing, ref oMissing);
+
+
+                //iterate over dataGridView
+                int r = 0;
+                for (int c = 0; c <= ColumnCount - 1; c++)
+                {
+                    for (r = 0; r <= RowCount - 1; r++)
+                    {
+                        DataArray[r, c] = DGV.Rows[r].Cells[c].Value;
+                        Console.WriteLine(DataArray[r, c]);
+                    } //end row loop
+                } //end column loop
+
+
+
+
+
+
+
+                //Insert a paragraph at the beginning of the document.
+                Word.Paragraph oPara1;
+                oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
+                oPara1.Range.Text = "Heading 1";
+                oPara1.Range.Font.Bold = 1;
+                oPara1.Format.SpaceAfter = 24;    //24 pt spacing after paragraph.
+                oPara1.Range.InsertParagraphAfter();
+
+                Object oMissed = oDoc.Paragraphs[1].Range;
+                Object oLinkToFile = false;
+                Object oSaveWithDocument = true;
+                //string fileName1 = @"C:\Users\dhaggerty\Desktop\images\cockrell.jpg";
+                //oDoc.InlineShapes.AddPicture(fileName1, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
+                Word.Paragraph oText;
+                oText = oDoc.Content.Paragraphs.Add(ref oMissing);
+                oText.Range.Text = "mispellingk";
+
+
+                Word.Paragraph oParaPic;
+                oParaPic = oDoc.Content.Paragraphs.Add(ref oMissing);
+                //ReplaceWordStub("{ILL}", dataGridView1.CurrentRow.Cells[3].Value.ToString(), wordDocument);
+                //.Image.Save(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                string fileName = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
+                //oDoc.InlineShapes.AddPicture(fileName, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
+                
+
+
+                //Insert a paragraph at the end of the document.
+                Word.Paragraph oPara2;
+                object oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+                oPara2 = oDoc.Content.Paragraphs.Add(ref oRng);
+                oPara2.Range.Text = "Heading 2";
+                oPara2.Range.InlineShapes.AddPicture(fileName, ref oMissing, ref oMissing, ref oMissing);
+                oPara2.Format.SpaceAfter = 6;
+                oPara2.Range.InsertParagraphAfter();
+
+                // Insert Page Break
+
+
+
+
+
+
+                //Add header into the document
+                //foreach (Microsoft.Office.Interop.Word.Section section in oDoc.Sections)
+                //{
+                //    //Get the header range and add the header details.
+                //    Microsoft.Office.Interop.Word.Range headerRange = section.Headers[Microsoft.Office.Interop.Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range;
+                //    headerRange.Fields.Add(headerRange, Microsoft.Office.Interop.Word.WdFieldType.wdFieldPage);
+                //    headerRange.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                //    headerRange.Font.ColorIndex = Microsoft.Office.Interop.Word.WdColorIndex.wdBlue;
+                //    headerRange.Font.Size = 10;
+                //    headerRange.Text = "PronetGroup";
+                //}
+
+                ////Add the footers into the document
+                //foreach (Microsoft.Office.Interop.Word.Section wordSection in oDoc.Sections)
+                //{
+                //    //Get the footer range and add the footer details.
+                //    Microsoft.Office.Interop.Word.Range footerRange = wordSection.Footers[Microsoft.Office.Interop.Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range;
+                //    footerRange.Font.ColorIndex = Microsoft.Office.Interop.Word.WdColorIndex.wdDarkRed;
+                //    footerRange.Font.Size = 10;
+                //    footerRange.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                //    footerRange.Text = "Report";
+                //}
+
+
+                //save the file
+                //oDoc.SaveAs2(filename);
+
+                //Close this form.
+                //this.Close();
             }
-            while (dPos >= Convert.ToDouble(oPos));
-            object oCollapseEnd = Word.WdCollapseDirection.wdCollapseEnd;
-            object oPageBreak = Word.WdBreakType.wdPageBreak;
-            wrdRng.Collapse(ref oCollapseEnd);
-            wrdRng.InsertBreak(ref oPageBreak);
-            wrdRng.Collapse(ref oCollapseEnd);
-            wrdRng.InsertAfter("We're now on page 2. Here's my chart:");
-            wrdRng.InsertParagraphAfter();
 
-            //Insert a chart.
-            Word.InlineShape oShape;
-            object oClassType = "MSGraph.Chart.8";
-            wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            oShape = wrdRng.InlineShapes.AddOLEObject(ref oClassType, ref oMissing,
-            ref oMissing, ref oMissing, ref oMissing,
-            ref oMissing, ref oMissing, ref oMissing);
 
-            //Demonstrate use of late bound oChart and oChartApp objects to
-            //manipulate the chart object with MSGraph.
-            object oChart;
-            object oChartApp;
-            oChart = oShape.OLEFormat.Object;
-            oChartApp = oChart.GetType().InvokeMember("Application",
-            BindingFlags.GetProperty, null, oChart, null);
 
-            //Change the chart type to Line.
-            object[] Parameters = new Object[1];
-            Parameters[0] = 4; //xlLine = 4
-            oChart.GetType().InvokeMember("ChartType", BindingFlags.SetProperty,
-            null, oChart, Parameters);
-
-            //Update the chart image and quit MSGraph.
-            oChartApp.GetType().InvokeMember("Update",
-            BindingFlags.InvokeMethod, null, oChartApp, null);
-            oChartApp.GetType().InvokeMember("Quit",
-            BindingFlags.InvokeMethod, null, oChartApp, null);
-            //... If desired, you can proceed from here using the Microsoft Graph 
-            //Object model on the oChart and oChartApp objects to make additional
-            //changes to the chart.
-
-            //Set the width of the chart.
-            oShape.Width = oWord.InchesToPoints(6.25f);
-            oShape.Height = oWord.InchesToPoints(3.57f);
-
-            //Add text after the chart.
-            wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            wrdRng.InsertParagraphAfter();
-            wrdRng.InsertAfter("THE END.");
-            wrdRng.InsertParagraphAfter();
-            wrdRng.InsertAfter("mispellerooney");
-
-            //Close this form.
-            this.Close();
         }
 
 
@@ -290,12 +268,15 @@ namespace photolog
 
 
 
+        /*
         public void Export_Data_To_Word(DataGridView DGV, string filename)
         {
             if (DGV.Rows.Count != 0)
             {
                 int RowCount = DGV.Rows.Count;
                 int ColumnCount = DGV.Columns.Count;
+                Console.WriteLine("Row count {0}", RowCount.ToString());
+                Console.WriteLine("Col count {0}", ColumnCount.ToString());
                 Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
 
                 //add rows
@@ -410,7 +391,7 @@ namespace photolog
         private void button2_Click(object sender, EventArgs e)
         {
             object oMissing = System.Reflection.Missing.Value;
-            object oEndOfDoc = "\\endofdoc"; /* \endofdoc is a predefined bookmark */
+            object oEndOfDoc = "\\endofdoc"; 
 
             //Start Word and create a new document.
             Word._Application oWord;
@@ -552,7 +533,7 @@ namespace photolog
             //Close this form.
             this.Close();
         }
-
+        */
     }
 }
 
