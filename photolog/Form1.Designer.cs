@@ -30,7 +30,6 @@
         {
             this.listView1 = new System.Windows.Forms.ListView();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.removeButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.columnImage = new System.Windows.Forms.DataGridViewImageColumn();
             this.columnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,6 +41,7 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.upButton = new System.Windows.Forms.Button();
             this.downButton = new System.Windows.Forms.Button();
+            this.removeDGButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,16 +53,6 @@
             this.listView1.Size = new System.Drawing.Size(277, 796);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
-            // 
-            // removeButton
-            // 
-            this.removeButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.removeButton.Location = new System.Drawing.Point(295, 122);
-            this.removeButton.Name = "removeButton";
-            this.removeButton.Size = new System.Drawing.Size(59, 23);
-            this.removeButton.TabIndex = 7;
-            this.removeButton.Text = "<<";
-            this.removeButton.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
@@ -159,18 +149,28 @@
             this.downButton.UseVisualStyleBackColor = true;
             this.downButton.Click += new System.EventHandler(this.downButton_Click);
             // 
+            // removeDGButton
+            // 
+            this.removeDGButton.Location = new System.Drawing.Point(296, 123);
+            this.removeDGButton.Name = "removeDGButton";
+            this.removeDGButton.Size = new System.Drawing.Size(58, 23);
+            this.removeDGButton.TabIndex = 19;
+            this.removeDGButton.Text = "<<";
+            this.removeDGButton.UseVisualStyleBackColor = true;
+            this.removeDGButton.Click += new System.EventHandler(this.removeDGButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1041, 835);
+            this.Controls.Add(this.removeDGButton);
             this.Controls.Add(this.downButton);
             this.Controls.Add(this.upButton);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.addDGButton);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.removeButton);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
@@ -188,7 +188,6 @@
 
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.Button removeButton;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button addDGButton;
         private System.Windows.Forms.Button button3;
@@ -200,6 +199,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FilePath;
         private System.Windows.Forms.Button upButton;
         private System.Windows.Forms.Button downButton;
+        private System.Windows.Forms.Button removeDGButton;
     }
 }
 
