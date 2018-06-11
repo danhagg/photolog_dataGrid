@@ -32,14 +32,14 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.removeButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.columnImage = new System.Windows.Forms.DataGridViewImageColumn();
+            this.columnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addDGButton = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnImage = new System.Windows.Forms.DataGridViewImageColumn();
             this.upButton = new System.Windows.Forms.Button();
             this.downButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -50,7 +50,7 @@
             // 
             this.listView1.Location = new System.Drawing.Point(12, 27);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(277, 600);
+            this.listView1.Size = new System.Drawing.Size(277, 796);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
@@ -73,8 +73,26 @@
             this.FilePath});
             this.dataGridView1.Location = new System.Drawing.Point(360, 27);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(669, 600);
+            this.dataGridView1.Size = new System.Drawing.Size(646, 796);
             this.dataGridView1.TabIndex = 11;
+            // 
+            // columnImage
+            // 
+            this.columnImage.HeaderText = "Image";
+            this.columnImage.Name = "columnImage";
+            // 
+            // columnText
+            // 
+            this.columnText.HeaderText = "Caption";
+            this.columnText.Name = "columnText";
+            this.columnText.Width = 500;
+            // 
+            // FilePath
+            // 
+            this.FilePath.HeaderText = "FilePath";
+            this.FilePath.Name = "FilePath";
+            this.FilePath.ReadOnly = true;
+            this.FilePath.Visible = false;
             // 
             // addDGButton
             // 
@@ -121,24 +139,6 @@
             this.openToolStripMenuItem.Text = "Open Folder";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
-            // FilePath
-            // 
-            this.FilePath.HeaderText = "FilePath";
-            this.FilePath.Name = "FilePath";
-            this.FilePath.ReadOnly = true;
-            this.FilePath.Visible = false;
-            // 
-            // columnText
-            // 
-            this.columnText.HeaderText = "Caption";
-            this.columnText.Name = "columnText";
-            this.columnText.Width = 500;
-            // 
-            // columnImage
-            // 
-            this.columnImage.HeaderText = "Image";
-            this.columnImage.Name = "columnImage";
-            // 
             // upButton
             // 
             this.upButton.Location = new System.Drawing.Point(296, 178);
@@ -164,7 +164,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1041, 639);
+            this.ClientSize = new System.Drawing.Size(1041, 835);
             this.Controls.Add(this.downButton);
             this.Controls.Add(this.upButton);
             this.Controls.Add(this.button3);
