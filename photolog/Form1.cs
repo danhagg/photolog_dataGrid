@@ -5,6 +5,9 @@ using System.IO;
 using Word = Microsoft.Office.Interop.Word;
 using Microsoft.Office.Interop.Word;
 using System.Reflection;
+using System.Diagnostics;
+
+
 
 namespace photolog
 {
@@ -15,15 +18,19 @@ namespace photolog
             InitializeComponent();
         }
 
-        int rowIndex;
-     
+
+
         // Set Form listView and datGridView properties on load
         private void Form1_Load(object sender, EventArgs e)
         {
             // listView1 PROPERTIES... Details, List, Tiles
             listView1.View = System.Windows.Forms.View.Details;
+            //listView1.View = System.Windows.Forms.View.LargeIcon;
             listView1.Columns.Add("", 150);
             listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
+            listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
+            this.Load += new EventHandler(Form1_Load);
+
 
             // DataGridView
             dataGridView1.RowTemplate.Height = 100;
@@ -48,7 +55,8 @@ namespace photolog
 
             // IMGLISTS TO HOLD IMAGES
             ImageList imgList1 = new ImageList();
-            imgList1.ImageSize = new Size(100, 100);
+            imgList1.ColorDepth = ColorDepth.Depth16Bit;
+            imgList1.ImageSize = new Size(250, 250);
             listView1.SmallImageList = imgList1;
 
             string[] files = Directory.GetFiles(fbd.SelectedPath);
@@ -64,11 +72,26 @@ namespace photolog
         }
 
 
+        // View Full-size Image
+        void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ListViewHitTestInfo info = listView1.HitTest(e.X, e.Y);
+            ListViewItem item = info.Item;
+
+            if (item != null)
+            {
+                Image newImage = Image.FromFile(item.Text);
+                Process.Start(item.Text);
+            }
+            else
+            {
+                this.listView1.SelectedItems.Clear();
+                MessageBox.Show("No Item is selected");
+            }
+        }
 
 
-
-
-        // METHOD - Move selected items from listView to dataGridView
+            // METHOD - Move selected items from listView to dataGridView
         private void list_img_SelectedIndexChanged(ListView source, DataGridView target)
         {
             if (listView1.SelectedItems.Count > 0)
@@ -183,99 +206,50 @@ namespace photolog
                 oDoc = oWord.Documents.Add(ref oMissing, ref oMissing,
                 ref oMissing, ref oMissing);
 
-
-                //////iterate over dataGridView
-                //int c = 0;
-                //for (int r = 0; r <= RowCount - 1; r++)
-                //{
-                //    for (c = 0; c <= ColumnCount - 1; c++)
-                //    {
-                //        DataArray[r, c] = DGV.Rows[r].Cells[c].Value;
-                //        Console.WriteLine(DataArray[r, c]);
-                //    } //end row loop
-                //} //end column loop
-
                 int RowCount = DGV.Rows.Count;
                 int ColumnCount = DGV.Columns.Count;
                 Console.WriteLine("Row count {0}", RowCount.ToString());
                 Console.WriteLine("Col count {0}", ColumnCount.ToString());
+                
 
 
 
 
                 for (int i = 0; i <= RowCount - 1; i++)
                 {
-                    //Console.WriteLine(DGV[2, i]);
-                    Console.WriteLine(DGV.Rows[i].Cells[2].Value);
                     Word.Paragraph oPara;
                     oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
-                    //string fileName1 = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
                     string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
                     string caption = DGV.Rows[i].Cells[1].Value.ToString();
+                    int figureNumber = DGV.Rows[i].Index;
+                    string figNum = (figureNumber + 1).ToString();
                     object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-                    oPara = oDoc.Content.Paragraphs.Add(ref oRngP);
-                    oPara.Range.Text = caption;
-                    oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
-                    oPara.Format.SpaceAfter = 6;
+                    oPara.Range.Text = "\v" + figNum + ". " + caption;
+                    var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);                
+                    oPara.Format.SpaceAfter = 12;
                     oPara.Range.InsertParagraphAfter();
-                    oPara.Range.Text = "mispellingk";
+
+                    if ((i+1) % 2 == 0)
+                    {
+                        oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                    }
+                    
                 }
 
+                foreach (InlineShape inline in oDoc.InlineShapes)
+                {
+                    Console.WriteLine(inline.Width);
+                    Console.WriteLine(inline.Height);
+                    inline.LockAspectRatio = true;
+                    
+                    //scale to 97.2%
+                    //inline.Width = (float)0.667 * inline.Width;
+                    //inline.Height = (float)0.667 * inline.Height;
+                    //inline.Width = 468;
+                    //inline.ScaleWidth
+                }
 
-                //// iterate over each row of dataGrid and extract caption + image path
-                //Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
-                //int DGV_col = 0;
-                //for (int DGV_row = 0; DGV_row <= RowCount - 1; DGV_row++)
-                //{
-                //    for (DGV_col = 0; DGV_col <= ColumnCount - 1; DGV_col++)
-                //    {
-                //        DataArray[DGV_row, DGV_col] = DGV.Rows[DGV_row].Cells[DGV_col].Value;
-                //        Console.WriteLine(DataArray[DGV_row, DGV_col]);
-                //    } //end row loop
-                //} //end column loop
-
-                //Console.WriteLine(DataArray.Length);
-
-                //string imagePath = "";
-
-                ////Insert a paragraph at the beginning of the document.
-                //Word.Paragraph oPara1;
-                //oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
-                ////oPara1.Range.Text = ;
-                //oPara1.Range.Text = "Heading 1";
-                //oPara1.Format.SpaceAfter = 24;    //24 pt spacing after paragraph.
-                //oPara1.Range.InsertParagraphAfter();
-
-                //Object oMissed = oDoc.Paragraphs[1].Range;
-                //Object oLinkToFile = false;
-                //Object oSaveWithDocument = true;
-                ////string fileName1 = @"C:\Users\dhaggerty\Desktop\images\cockrell.jpg";
-                ////oDoc.InlineShapes.AddPicture(fileName1, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
-                //Word.Paragraph oText;
-                //oText = oDoc.Content.Paragraphs.Add(ref oMissing);
-                //oText.Range.Text = "mispellingk";
-
-
-                //Word.Paragraph oParaPic;
-                //oParaPic = oDoc.Content.Paragraphs.Add(ref oMissing);
-                ////ReplaceWordStub("{ILL}", dataGridView1.CurrentRow.Cells[3].Value.ToString(), wordDocument);
-                ////.Image.Save(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                //string fileName = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
-                ////oDoc.InlineShapes.AddPicture(fileName, ref oLinkToFile, ref oSaveWithDocument, ref oMissed);
-                
-
-
-                ////Insert a paragraph at the end of the document.
-                //Word.Paragraph oPara2;
-                //object oRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-                //oPara2 = oDoc.Content.Paragraphs.Add(ref oRng);
-                //oPara2.Range.Text = "Heading 2";
-                //oPara2.Range.InlineShapes.AddPicture(fileName, ref oMissing, ref oMissing, ref oMissing);
-                //oPara2.Format.SpaceAfter = 6;
-                //oPara2.Range.InsertParagraphAfter();
-
-                // Insert Page Break
-
+                Console.WriteLine("Paragraph Count: " + oDoc.Paragraphs.Count);
 
 
 
