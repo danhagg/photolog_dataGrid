@@ -15,6 +15,7 @@ namespace photolog
             InitializeComponent();
         }
 
+        int rowIndex;
      
         // Set Form listView and datGridView properties on load
         private void Form1_Load(object sender, EventArgs e)
@@ -28,6 +29,7 @@ namespace photolog
             dataGridView1.RowTemplate.Height = 100;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
+
         }
 
         // BUTTON - Open Folder
@@ -62,6 +64,10 @@ namespace photolog
         }
 
 
+
+
+
+
         // METHOD - Move selected items from listView to dataGridView
         private void list_img_SelectedIndexChanged(ListView source, DataGridView target)
         {
@@ -74,6 +80,7 @@ namespace photolog
                 listView1.SelectedItems[0].Remove();
             }
         }
+
 
 
         // BUTTON - Move selected items from listView to dataGridView
@@ -89,6 +96,52 @@ namespace photolog
             // need to fix remove/clear
             //dataGridView1.Rows.RemoveAt(0);
             //dataGridView1.ClearSelection();
+        }
+
+
+        // BUTTON - Up
+        private void upButton_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = dataGridView1;
+            try
+            {
+                int totalRows = dgv.Rows.Count;
+                // get index of the row for the selected cell
+                int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+                if (rowIndex == 0)
+                    return;
+                // get index of the column for the selected cell
+                int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
+                DataGridViewRow selectedRow = dgv.Rows[rowIndex];
+                dgv.Rows.Remove(selectedRow);
+                dgv.Rows.Insert(rowIndex - 1, selectedRow);
+                dgv.ClearSelection();
+                dgv.Rows[rowIndex - 1].Cells[colIndex].Selected = true;
+            }
+            catch { }
+        }
+
+
+        // BUTTON - Down
+        private void downButton_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = dataGridView1;
+            try
+            {
+                int totalRows = dgv.Rows.Count;
+                // get index of the row for the selected cell
+                int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+                if (rowIndex == totalRows - 1)
+                    return;
+                // get index of the column for the selected cell
+                int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
+                DataGridViewRow selectedRow = dgv.Rows[rowIndex];
+                dgv.Rows.Remove(selectedRow);
+                dgv.Rows.Insert(rowIndex + 1, selectedRow);
+                dgv.ClearSelection();
+                dgv.Rows[rowIndex + 1].Cells[colIndex].Selected = true;
+            }
+            catch { }
         }
 
 
@@ -158,9 +211,10 @@ namespace photolog
                     oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
                     //string fileName1 = @"C:\Users\dhaggerty\Desktop\images\bayou.jpg";
                     string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
+                    string caption = DGV.Rows[i].Cells[1].Value.ToString();
                     object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
                     oPara = oDoc.Content.Paragraphs.Add(ref oRngP);
-                    oPara.Range.Text = "Heading 2";
+                    oPara.Range.Text = caption;
                     oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
                     oPara.Format.SpaceAfter = 6;
                     oPara.Range.InsertParagraphAfter();
@@ -261,6 +315,10 @@ namespace photolog
 
 
         }
+
+
+
+
 
 
 
