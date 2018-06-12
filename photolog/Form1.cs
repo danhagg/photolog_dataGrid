@@ -24,8 +24,7 @@ namespace photolog
         {
             // listView1 PROPERTIES... Details, List, Tiles
             listView1.View = System.Windows.Forms.View.Details;
-            //listView1.View = System.Windows.Forms.View.LargeIcon;
-            listView1.Columns.Add("", 150);
+            listView1.Columns.Add("", 250);
             listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
             listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
             this.Load += new EventHandler(Form1_Load);
@@ -35,7 +34,6 @@ namespace photolog
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            //dataGridView1.Columns[2].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         }
 
 
@@ -46,9 +44,10 @@ namespace photolog
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             // set root folder
             // fbd.RootFolder = Environment.SpecialFolder.MyDocuments;
-            fbd.Description = "Choose a folder of pictures to upload";
+            fbd.Description = "Choose an UNZIPPED folder of pictures to upload";
+
             // check user selects pass
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (fbd.ShowDialog() == DialogResult.OK)
 
                 // clear previous list
                 listView1.Items.Clear();
@@ -64,8 +63,6 @@ namespace photolog
             {
                 imgList1.Images.Add(Image.FromFile(files[i]));
                 string fileNameFull = Path.GetFullPath(files[i]);
-                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                //listView1.Items.Add(fileName, i);
                 listView1.Items.Add(fileNameFull, i);
             }
         }
@@ -91,7 +88,7 @@ namespace photolog
 
 
         // METHOD - Move selected items from listView to dataGridView
-        private void list_img_SelectedIndexChanged(ListView source, DataGridView target)
+        private void list_to_grid(ListView source, DataGridView target)
         {
             if (listView1.SelectedItems.Count > 0)
             {
@@ -107,43 +104,112 @@ namespace photolog
         // BUTTON - Move selected items from listView to dataGridView
         private void addDGButton_Click(object sender, EventArgs e)
         {
-            list_img_SelectedIndexChanged(listView1, dataGridView1);
+            list_to_grid(listView1, dataGridView1);
         }
 
 
         // METHOD - Move selected items from dataGridView to listView
-        private void removeDGButton_Click(object sender, EventArgs e)
+        private void grid_to_list(DataGridView source, ListView target)
         {
-            DataGridView dgv = dataGridView1;
-            try
+            //int totalRows = dataGridView1.Rows.Count;
+            // get index of the row for the selected cell
+            int rowIndex = dataGridView1.SelectedCells[0].OwningRow.Index;
+            int colIndex = dataGridView1.SelectedCells[0].OwningColumn.Index;
+            string patherooney;
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
-                int totalRows = dgv.Rows.Count;
-                // get index of the row for the selected cell
-                int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+                //lvItem = new ListViewItem();
+                patherooney = row.Cells[2].Value.ToString();
+                Console.WriteLine("rooney {0}", patherooney);
 
-                // get index of the column for the selected cell
-                int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
-                DataGridViewRow selectedRow = dgv.Rows[rowIndex];
-                dgv.Rows.Remove(selectedRow);
-                dgv.ClearSelection();
-                dgv.Rows[rowIndex - 1].Cells[colIndex].Selected = true;
+                // Need to match the index to put back the correct image
+                listView1.Items.Add(patherooney, 1);
 
-                // now we need to reload the removed data back into listView1
-                //
-                //imgList1.Images.Add(Image.FromFile(files[i]));
+                dataGridView1.Rows.Remove(row);
+                dataGridView1.ClearSelection();
+                //dataGridView1.Rows[rowIndex - 1].Cells[colIndex].Selected = true;
 
-                /*
-                string fileNameFull = Path.GetFullPath(files[i]);
-                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                listView1.Items.Add(fileNameFull, i);
-                */
+
+                //lvItem.SubItems.Add(row.Cells["imageColumn"].Value.ToString());
+                //lvItem.SubItems.Add(row.Cells["Caption"].Value.ToString());
+                //Image newImage = Image.FromFile(patherooney);
+                //lvItem.SubItems.Add(patherooney);
+                //listView1.Items.Add(lvItem);
+
+
+
             }
-            catch { }
+
+
+            //if (listView1.SelectedItems.Count > 0)
+            //{
+            //    var item = listView1.SelectedItems[0];
+            //    var img = item.ImageList.Images[item.ImageIndex];
+            //    var pth = item.Text;
+            //    dataGridView1.Rows.Add(img, "Insert Caption Here", pth);
+            //    listView1.SelectedItems[0].Remove();
+            //}
         }
 
 
-        // BUTTON - Up
-        private void upButton_Click(object sender, EventArgs e)
+        // BUTTON - Move selected items from dataGridView to listView
+        private void removeDGButton_Click(object sender, EventArgs e)
+        {
+            grid_to_list(dataGridView1, listView1);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*
+            // METHOD - Move selected items from dataGridView to listView
+            private void removeDGButton_Click(object sender, EventArgs e)
+            {
+                DataGridView dgv = dataGridView1;
+
+                try
+                {
+                    int totalRows = dgv.Rows.Count;
+                    // get index of the row for the selected cell
+                    int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+                    Console.WriteLine("rowIndex is {0}", rowIndex);
+
+                    // get index of the column for the selected cell
+                    int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
+                    DataGridViewRow selectedRow = dgv.Rows[rowIndex];
+                    Console.WriteLine("selected {0}", selectedRow);
+                    var selFilename = selectedRow.Cells[2].Value;
+                    Console.WriteLine("selFilename {0}", selFilename);
+                    // Load from dgv column 2 path to listView1
+                    //imgList1.Images.Add(Image.FromFile(selFilename.ToString()));
+
+                    //string fileNameFull = Path.GetFullPath(files[i]);
+                    //string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                    //listView1.Items.Add(selFilename.ToString(), );             
+
+                    // Remove from dgv
+                    dgv.Rows.Remove(selectedRow);
+                    dgv.ClearSelection();
+                    dgv.Rows[rowIndex - 1].Cells[colIndex].Selected = true;              
+                }
+                catch { }
+            }
+            */
+
+            // BUTTON - Up
+            private void upButton_Click(object sender, EventArgs e)
         {
             DataGridView dgv = dataGridView1;
             try
