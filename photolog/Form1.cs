@@ -24,13 +24,13 @@ namespace photolog
         {
             // listView1 PROPERTIES... Details, List, Tiles
             listView1.View = System.Windows.Forms.View.Details;
-            listView1.Columns.Add("", 250);
-            listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
+            //listView1.Columns.Add("", 250);
+            //listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
             listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
             this.Load += new EventHandler(Form1_Load);
 
             // DataGridView
-            dataGridView1.RowTemplate.Height = 100;
+            dataGridView1.RowTemplate.Height = 150;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
@@ -55,17 +55,31 @@ namespace photolog
             // IMGLISTS TO HOLD IMAGES
             ImageList imgList1 = new ImageList();
             imgList1.ColorDepth = ColorDepth.Depth16Bit;
-            imgList1.ImageSize = new Size(250, 250);
+            imgList1.ImageSize = new Size(150, 150);
             listView1.SmallImageList = imgList1;
 
             string[] files = Directory.GetFiles(fbd.SelectedPath);
+
             for (int i = 0; i < files.Length; i++)
             {
-                imgList1.Images.Add(Image.FromFile(files[i]));
                 string fileNameFull = Path.GetFullPath(files[i]);
-                listView1.Items.Add(fileNameFull, i);
+                ListViewItem item = new ListViewItem(fileNameFull, i);               
+                imgList1.Images.Add(Image.FromFile(files[i]));
+                item.SubItems.Add(i.ToString());
+                listView1.Items.Add(item);
+
             }
         }
+
+
+        // calculate listView Length
+        private void dgLength()
+        {
+            int dgRows = dataGridView1.Rows.Count;
+            textBox1.Text = dgRows.ToString();
+
+        }
+
 
 
         // View Full-size Image
@@ -95,9 +109,11 @@ namespace photolog
                 var item = listView1.SelectedItems[0];
                 var img = item.ImageList.Images[item.ImageIndex];
                 var pth = item.Text;
-                dataGridView1.Rows.Add(img, "Insert Caption Here", pth);
+                var ind = item.ImageIndex;
+                dataGridView1.Rows.Add(img, "Insert Caption Here", pth, ind);
                 listView1.SelectedItems[0].Remove();
             }
+            dgLength();
         }
 
 
@@ -113,42 +129,25 @@ namespace photolog
         {
             //int totalRows = dataGridView1.Rows.Count;
             // get index of the row for the selected cell
-            int rowIndex = dataGridView1.SelectedCells[0].OwningRow.Index;
-            int colIndex = dataGridView1.SelectedCells[0].OwningColumn.Index;
+            //int rowIndex = dataGridView1.SelectedCells[0].OwningRow.Index;
+            //int colIndex = dataGridView1.SelectedCells[0].OwningColumn.Index;
             string patherooney;
+            string indexerooney;
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
-                //lvItem = new ListViewItem();
                 patherooney = row.Cells[2].Value.ToString();
-                Console.WriteLine("rooney {0}", patherooney);
+                indexerooney = row.Cells[3].Value.ToString();
 
                 // Need to match the index to put back the correct image
-                listView1.Items.Add(patherooney, 1);
+                ListViewItem item = new ListViewItem(patherooney, Int32.Parse(indexerooney));
+                item.SubItems.Add(indexerooney.ToString());
+                listView1.Items.Add(item);
 
+                // remove from dataGridView
                 dataGridView1.Rows.Remove(row);
                 dataGridView1.ClearSelection();
-                //dataGridView1.Rows[rowIndex - 1].Cells[colIndex].Selected = true;
-
-
-                //lvItem.SubItems.Add(row.Cells["imageColumn"].Value.ToString());
-                //lvItem.SubItems.Add(row.Cells["Caption"].Value.ToString());
-                //Image newImage = Image.FromFile(patherooney);
-                //lvItem.SubItems.Add(patherooney);
-                //listView1.Items.Add(lvItem);
-
-
-
             }
-
-
-            //if (listView1.SelectedItems.Count > 0)
-            //{
-            //    var item = listView1.SelectedItems[0];
-            //    var img = item.ImageList.Images[item.ImageIndex];
-            //    var pth = item.Text;
-            //    dataGridView1.Rows.Add(img, "Insert Caption Here", pth);
-            //    listView1.SelectedItems[0].Remove();
-            //}
+            dgLength();
         }
 
 
@@ -158,55 +157,6 @@ namespace photolog
             grid_to_list(dataGridView1, listView1);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            /*
-            // METHOD - Move selected items from dataGridView to listView
-            private void removeDGButton_Click(object sender, EventArgs e)
-            {
-                DataGridView dgv = dataGridView1;
-
-                try
-                {
-                    int totalRows = dgv.Rows.Count;
-                    // get index of the row for the selected cell
-                    int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
-                    Console.WriteLine("rowIndex is {0}", rowIndex);
-
-                    // get index of the column for the selected cell
-                    int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
-                    DataGridViewRow selectedRow = dgv.Rows[rowIndex];
-                    Console.WriteLine("selected {0}", selectedRow);
-                    var selFilename = selectedRow.Cells[2].Value;
-                    Console.WriteLine("selFilename {0}", selFilename);
-                    // Load from dgv column 2 path to listView1
-                    //imgList1.Images.Add(Image.FromFile(selFilename.ToString()));
-
-                    //string fileNameFull = Path.GetFullPath(files[i]);
-                    //string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                    //listView1.Items.Add(selFilename.ToString(), );             
-
-                    // Remove from dgv
-                    dgv.Rows.Remove(selectedRow);
-                    dgv.ClearSelection();
-                    dgv.Rows[rowIndex - 1].Cells[colIndex].Selected = true;              
-                }
-                catch { }
-            }
-            */
 
             // BUTTON - Up
             private void upButton_Click(object sender, EventArgs e)
@@ -305,7 +255,8 @@ namespace photolog
                     string figNum = (figureNumber + 1).ToString();
                     object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
                     oPara.Range.Text = "\v" + figNum + ". " + caption;
-                    var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);                
+                    var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
+                    Console.WriteLine("width is {0}", pic.Width);
                     oPara.Format.SpaceAfter = 12;
                     oPara.Range.InsertParagraphAfter();
 
@@ -316,25 +267,44 @@ namespace photolog
                 }
 
 
-                // set Word image size and position
+                // Document settings - printed to Console
                 var maxHeight = oDoc.PageSetup.PageHeight - oDoc.PageSetup.BottomMargin;
                 var leftMargin = oDoc.PageSetup.LeftMargin;
                 var rightMargin = oDoc.PageSetup.RightMargin;
                 var pageWidth = oDoc.PageSetup.PageWidth;
-                // - oDoc.PageSetup.LeftMargin;
-
-                foreach (InlineShape inline in oDoc.InlineShapes)
-                {
-                    //scale to 97.2%
-                    inline.Width = (float)0.972 * inline.Width;
-                    inline.Height = (float)0.972 * inline.Height;
-                    //inline.ScaleWidth
-                }
 
                 Console.WriteLine("max height is {0}", maxHeight);
                 Console.WriteLine("pageWidth is {0}", pageWidth);
                 Console.WriteLine("left margin is {0}", leftMargin);
                 Console.WriteLine("right margin is {0}", rightMargin);
+                // set Word image size and position
+
+
+                float picHeight;
+                float ratio;
+                float diff;
+                foreach (InlineShape inline in oDoc.InlineShapes)
+                {
+                    if (inline.Height >= 300)
+                    {
+                        picHeight = inline.Height;
+                        ratio = 300 / picHeight;
+                        inline.Height = 300;
+                        inline.Width = inline.Width * ratio;
+                    }
+                    //pageWidth = 612
+                    // 2*72 for margins
+                    //612 - (2*72) = 468
+                    //if (inline.Width < 468)
+                    //{
+                    //    inline.
+                    //    diff = 468 - inline.Width;
+                    //    // center the pic
+
+                    //}
+                }
+
+               
 
 
                 //Add header into the document
