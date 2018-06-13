@@ -63,7 +63,7 @@ namespace photolog
             for (int i = 0; i < files.Length; i++)
             {
                 string fileNameFull = Path.GetFullPath(files[i]);
-                ListViewItem item = new ListViewItem(fileNameFull, i);               
+                ListViewItem item = new ListViewItem(fileNameFull, i);
                 imgList1.Images.Add(Image.FromFile(files[i]));
                 item.SubItems.Add(i.ToString());
                 listView1.Items.Add(item);
@@ -158,8 +158,8 @@ namespace photolog
         }
 
 
-            // BUTTON - Up
-            private void upButton_Click(object sender, EventArgs e)
+        // BUTTON - Up
+        private void upButton_Click(object sender, EventArgs e)
         {
             DataGridView dgv = dataGridView1;
             try
@@ -230,33 +230,61 @@ namespace photolog
                 // \endofdoc is a predefined bookmark
                 object oEndOfDoc = "\\endofdoc";
 
-                //Start Word and create a new document.
-                Word._Application oWord;
-                Word._Document oDoc;
-                oWord = new Word.Application();
+                //Start Word and create a new document.          
+                _Application oWord = new Word.Application();
                 oWord.Visible = true;
-                oDoc = oWord.Documents.Add(ref oMissing, ref oMissing,
+                _Document oDoc = oWord.Documents.Add(ref oMissing, ref oMissing,
                 ref oMissing, ref oMissing);
+
+
+
+
                 int RowCount = DGV.Rows.Count;
                 int ColumnCount = DGV.Columns.Count;
 
-
-                // iterate over DG, 
-                //insert image at diff locations as to whether 
-                //i % 2==0 or != 0
                 // Iterate over each DataGrid row and extract image path and caption text
                 for (int i = 0; i <= RowCount - 1; i++)
                 {
-                    Word.Paragraph oPara;
-                    oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    // make a para as numbered list
+                    Paragraph oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    oPara.Range.ListFormat.ApplyNumberDefault();
+
+                    // Get image path and caption from dataGridView
+                    string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
+                    string caption = DGV.Rows[i].Cells[1].Value.ToString();
+
+                    // Ive forgotten
+                    object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+
+                    var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
+                    //Write substring into Word doc with a bullet before it.
+                    oPara.Range.InsertBefore(caption + "\v");
+                    oPara.Format.SpaceAfter = pic.Height;
+                    oPara.Range.InsertParagraphAfter();
+
+                    //// put this if statement above
+                    //if ((i + 1) % 2 == 0)
+                    //{
+                    //    oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                    //}
+                }
+
+
+                /* WORKS
+                // Iterate over each DataGrid row and extract image path and caption text
+                for (int i = 0; i <= RowCount - 1; i++)
+                {
+  
+                    Paragraph oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    oPara.Range.ListFormat.ApplyBulletDefault();
                     string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
                     string caption = DGV.Rows[i].Cells[1].Value.ToString();
                     int figureNumber = DGV.Rows[i].Index;
-                    string figNum = (figureNumber + 1).ToString();
+                    //string figNum = (figureNumber + 1).ToString();
                     object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-                    oPara.Range.Text = "\v" + figNum + ". " + caption;
+                    oPara.Range.Text = "\v" + caption;
                     var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
-                    Console.WriteLine("width is {0}", pic.Width);
+                    //Console.WriteLine("width is {0}", pic.Width);
                     oPara.Format.SpaceAfter = 12;
                     oPara.Range.InsertParagraphAfter();
 
@@ -265,6 +293,7 @@ namespace photolog
                         oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
                     }                  
                 }
+                */
 
 
                 // Document settings - printed to Console
@@ -280,62 +309,53 @@ namespace photolog
                 // set Word image size and position
 
 
-                float picHeight;
-                float ratio;
-                float diff;
+                // Portraits vs Landscapes
                 foreach (InlineShape inline in oDoc.InlineShapes)
                 {
-                    if (inline.Height >= 300)
-                    {
-                        picHeight = inline.Height;
-                        ratio = 300 / picHeight;
-                        inline.Height = 300;
-                        inline.Width = inline.Width * ratio;
-                    }
-                    //pageWidth = 612
-                    // 2*72 for margins
-                    //612 - (2*72) = 468
-                    //if (inline.Width < 468)
-                    //{
-                    //    inline.
-                    //    diff = 468 - inline.Width;
-                    //    // center the pic
+                    //lock aspect ratio
+                    inline.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
+                    Shape sh = inline.ConvertToShape();                  
 
-                    //}
+                    if (sh.Height <= sh.Width)
+                    {
+                        sh.Width = 300;
+                    
+                    }
+                    else
+                    {
+                        sh.Height = 300;
+                    }                  
                 }
 
-               
+                    //float picHeight;
+                    //float ratio;
+                    ////float diff;
+                    //foreach (InlineShape inline in oDoc.InlineShapes)
+                    //{
+                    //    if (inline.Height >= 250)
+                    //    {
+                    //        picHeight = inline.Height;
+                    //        ratio = 250 / picHeight;
+                    //        inline.Height = 250;
+                    //        inline.Width = inline.Width * ratio;
+                        //}
+                        //pageWidth = 612
+                        // 2*72 for margins
+                        //612 - (2*72) = 468
+                        //if (inline.Width < 468)
+                        //{
+                        //    inline.
+                        //    diff = 468 - inline.Width;
+                        //    // center the pic
 
+                        //}
+                    //}
+                    //save the file
+                    //oDoc.SaveAs2(filename);
 
-                //Add header into the document
-                //foreach (Microsoft.Office.Interop.Word.Section section in oDoc.Sections)
-                //{
-                //    //Get the header range and add the header details.
-                //    Microsoft.Office.Interop.Word.Range headerRange = section.Headers[Microsoft.Office.Interop.Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range;
-                //    headerRange.Fields.Add(headerRange, Microsoft.Office.Interop.Word.WdFieldType.wdFieldPage);
-                //    headerRange.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                //    headerRange.Font.ColorIndex = Microsoft.Office.Interop.Word.WdColorIndex.wdBlue;
-                //    headerRange.Font.Size = 10;
-                //    headerRange.Text = "PronetGroup";
-                //}
-
-                ////Add the footers into the document
-                //foreach (Microsoft.Office.Interop.Word.Section wordSection in oDoc.Sections)
-                //{
-                //    //Get the footer range and add the footer details.
-                //    Microsoft.Office.Interop.Word.Range footerRange = wordSection.Footers[Microsoft.Office.Interop.Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range;
-                //    footerRange.Font.ColorIndex = Microsoft.Office.Interop.Word.WdColorIndex.wdDarkRed;
-                //    footerRange.Font.Size = 10;
-                //    footerRange.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                //    footerRange.Text = "Report";
-                //}
-
-
-                //save the file
-                //oDoc.SaveAs2(filename);
-
-                //Close this form.
-                //this.Close();
+                    //Close this form.
+                    //this.Close();
+                
             }
         }
     }
