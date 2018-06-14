@@ -236,9 +236,6 @@ namespace photolog
                 _Document oDoc = oWord.Documents.Add(ref oMissing, ref oMissing,
                 ref oMissing, ref oMissing);
 
-
-
-
                 int RowCount = DGV.Rows.Count;
                 int ColumnCount = DGV.Columns.Count;
 
@@ -247,27 +244,84 @@ namespace photolog
                 {
                     // make a para as numbered list
                     Paragraph oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
-                    oPara.Range.ListFormat.ApplyNumberDefault();
+                    oPara.KeepWithNext = 0;
+                    Range rngTarget = oPara.Range;
+                    Object objRange = rngTarget;
+                    object anchor = rngTarget;
+                    
+                    //oPara.Range.ListFormat.ApplyNumberDefault();
+                    rngTarget.ListFormat.ApplyNumberDefault();
 
                     // Get image path and caption from dataGridView
                     string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
                     string caption = DGV.Rows[i].Cells[1].Value.ToString();
 
                     // Ive forgotten
-                    object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+                    //object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+                    
+                    InlineShape pic = rngTarget.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref anchor);
+                    Shape sh = pic.ConvertToShape();
+                    sh.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
+                    //var ank = sh.Anchor;
+                    //sh.Anchor.InsertAfter(caption + "\v");
+                    if (sh.Height <= sh.Width)
+                    {
+                        sh.Width = 300;
+                        sh.Left = (float)WdShapePosition.wdShapeCenter;
+                        //sh.TopRelative = ;
+                        //sh.TopRelative = (float)WdParagraphAlignment.wdAlignParagraphCenter;
+                        // SAVE WITH DOCUMENT??
+                        //sh.RelativeVerticalPosition = (float)WdParagraphAlignment.wdAlignParagraphJustify;
+                    }
+                    else
+                    {
+                        sh.Height = 300;
+                        sh.Left = (float)WdShapePosition.wdShapeCenter;
+                    }
 
-                    var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
+                    //wrd box
+                    //Shape wrdTextBox = oDoc.Shapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal,0, 2, 500, 30, ref objRange);
+                    //wrdTextBox.TextFrame.TextRange.Text = caption;
+                    //wrdTextBox.TextFrame.TextRange.InsertBefore(caption);
+                    
+
                     //Write substring into Word doc with a bullet before it.
-                    oPara.Range.InsertBefore(caption + "\v");
-                    oPara.Format.SpaceAfter = pic.Height;
-                    oPara.Range.InsertParagraphAfter();
+                    rngTarget.InsertBefore(caption + "\v");
+                    
 
-                    //// put this if statement above
-                    //if ((i + 1) % 2 == 0)
-                    //{
-                    //    oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
-                    //}
+                    
+                    oPara.Format.SpaceAfter = 192;
+                    //oPara.Format.Alignment.wdAlignVerticalCenter;
+                    rngTarget.InsertParagraphAfter();
+                    
+
+
+                    // put this if statement above
+                    if ((i + 1) % 2 == 0)
+                    {
+                        oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                    }
                 }
+
+                // Portraits vs Landscapes
+                //foreach (InlineShape inline in oDoc.InlineShapes)
+                //{
+                //    //lock aspect ratio
+                //    inline.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
+                //    Shape sh = inline.ConvertToShape();
+
+                //    if (sh.Height <= sh.Width)
+                //    {
+                //        sh.Width = 300;
+                //        sh.Left = (float)WdShapePosition.wdShapeCenter;
+
+                //    }
+                //    else
+                //    {
+                //        sh.Height = 300;
+                //        sh.Left = (float)WdShapePosition.wdShapeCenter;
+                //    }
+                //}
 
 
                 /* WORKS
@@ -309,23 +363,7 @@ namespace photolog
                 // set Word image size and position
 
 
-                // Portraits vs Landscapes
-                foreach (InlineShape inline in oDoc.InlineShapes)
-                {
-                    //lock aspect ratio
-                    inline.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
-                    Shape sh = inline.ConvertToShape();                  
 
-                    if (sh.Height <= sh.Width)
-                    {
-                        sh.Width = 300;
-                    
-                    }
-                    else
-                    {
-                        sh.Height = 300;
-                    }                  
-                }
 
                     //float picHeight;
                     //float ratio;
