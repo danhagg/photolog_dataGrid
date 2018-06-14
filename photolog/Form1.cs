@@ -81,6 +81,23 @@ namespace photolog
         }
 
 
+        // calculate listView Length
+        private void capLength()
+        {
+            if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
+            {
+                string cap = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+                textBox2.Text = cap.Length.ToString();
+            }
+        }
+
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            capLength();
+        }
+
+
 
         // View Full-size Image
         void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -127,10 +144,6 @@ namespace photolog
         // METHOD - Move selected items from dataGridView to listView
         private void grid_to_list(DataGridView source, ListView target)
         {
-            //int totalRows = dataGridView1.Rows.Count;
-            // get index of the row for the selected cell
-            //int rowIndex = dataGridView1.SelectedCells[0].OwningRow.Index;
-            //int colIndex = dataGridView1.SelectedCells[0].OwningColumn.Index;
             string patherooney;
             string indexerooney;
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
@@ -204,8 +217,11 @@ namespace photolog
         }
 
 
-        // BUTTON - CreateWordDoc
-        private void button3_Click(object sender, EventArgs e)
+
+
+
+    // BUTTON - CreateWordDoc
+    private void button3_Click(object sender, EventArgs e)
         {
             //SaveFileDialog sfd = new SaveFileDialog();
             //sfd.Filter = "Word Documents (*.docx)|*.docx";
@@ -220,7 +236,6 @@ namespace photolog
 
 
         // METHOD - Create the Word doc
-        //private void CreateWordDoc(DataGridView DGV, string filename)
         private void CreateWordDoc(DataGridView DGV)
         {
             if (DGV.Rows.Count != 0)
@@ -237,163 +252,49 @@ namespace photolog
                 ref oMissing, ref oMissing);
 
                 int RowCount = DGV.Rows.Count;
-                int ColumnCount = DGV.Columns.Count;
-
+                
                 // Iterate over each DataGrid row and extract image path and caption text
                 for (int i = 0; i <= RowCount - 1; i++)
                 {
+
                     // make a para as numbered list
-                    Paragraph oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
-                    oPara.KeepWithNext = 0;
-                    Range rngTarget = oPara.Range;
-                    Object objRange = rngTarget;
-                    object anchor = rngTarget;
+                    Paragraph oPara0 = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    oPara0.KeepWithNext = 0;
+                    oPara0.Format.SpaceAfter=0;
+                    Paragraph oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    Range rngTarget0 = oPara0.Range;
+                    Range rngTarget1 = oPara1.Range;
+                    object anchor = rngTarget1;
                     
                     //oPara.Range.ListFormat.ApplyNumberDefault();
-                    rngTarget.ListFormat.ApplyNumberDefault();
+                    rngTarget0.ListFormat.ApplyNumberDefault();
+
 
                     // Get image path and caption from dataGridView
                     string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
                     string caption = DGV.Rows[i].Cells[1].Value.ToString();
 
-                    // Ive forgotten
-                    //object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
                     
-                    InlineShape pic = rngTarget.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref anchor);
+                    InlineShape pic = rngTarget1.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref anchor);
+                    
                     Shape sh = pic.ConvertToShape();
                     sh.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
-                    //var ank = sh.Anchor;
-                    //sh.Anchor.InsertAfter(caption + "\v");
-                    if (sh.Height <= sh.Width)
+                    
+                    sh.Height = 220;
+
+                    if (sh.Width >300)
                     {
                         sh.Width = 300;
-                        sh.Left = (float)WdShapePosition.wdShapeCenter;
-                        //sh.TopRelative = ;
-                        //sh.TopRelative = (float)WdParagraphAlignment.wdAlignParagraphCenter;
-                        // SAVE WITH DOCUMENT??
-                        //sh.RelativeVerticalPosition = (float)WdParagraphAlignment.wdAlignParagraphJustify;
-                    }
-                    else
-                    {
-                        sh.Height = 300;
-                        sh.Left = (float)WdShapePosition.wdShapeCenter;
                     }
 
-                    //wrd box
-                    //Shape wrdTextBox = oDoc.Shapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal,0, 2, 500, 30, ref objRange);
-                    //wrdTextBox.TextFrame.TextRange.Text = caption;
-                    //wrdTextBox.TextFrame.TextRange.InsertBefore(caption);
-                    
+                    sh.Left = (float)WdShapePosition.wdShapeCenter;
+                    sh.Top = 0;
 
                     //Write substring into Word doc with a bullet before it.
-                    rngTarget.InsertBefore(caption + "\v");
-                    
-
-                    
-                    oPara.Format.SpaceAfter = 192;
-                    //oPara.Format.Alignment.wdAlignVerticalCenter;
-                    rngTarget.InsertParagraphAfter();
-                    
-
-
-                    // put this if statement above
-                    if ((i + 1) % 2 == 0)
-                    {
-                        oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
-                    }
-                }
-
-                // Portraits vs Landscapes
-                //foreach (InlineShape inline in oDoc.InlineShapes)
-                //{
-                //    //lock aspect ratio
-                //    inline.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
-                //    Shape sh = inline.ConvertToShape();
-
-                //    if (sh.Height <= sh.Width)
-                //    {
-                //        sh.Width = 300;
-                //        sh.Left = (float)WdShapePosition.wdShapeCenter;
-
-                //    }
-                //    else
-                //    {
-                //        sh.Height = 300;
-                //        sh.Left = (float)WdShapePosition.wdShapeCenter;
-                //    }
-                //}
-
-
-                /* WORKS
-                // Iterate over each DataGrid row and extract image path and caption text
-                for (int i = 0; i <= RowCount - 1; i++)
-                {
-  
-                    Paragraph oPara = oDoc.Content.Paragraphs.Add(ref oMissing);
-                    oPara.Range.ListFormat.ApplyBulletDefault();
-                    string fileName1 = DGV.Rows[i].Cells[2].Value.ToString();
-                    string caption = DGV.Rows[i].Cells[1].Value.ToString();
-                    int figureNumber = DGV.Rows[i].Index;
-                    //string figNum = (figureNumber + 1).ToString();
-                    object oRngP = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-                    oPara.Range.Text = "\v" + caption;
-                    var pic = oPara.Range.InlineShapes.AddPicture(fileName1, ref oMissing, ref oMissing, ref oMissing);
-                    //Console.WriteLine("width is {0}", pic.Width);
-                    oPara.Format.SpaceAfter = 12;
-                    oPara.Range.InsertParagraphAfter();
-
-                    if ((i+1) % 2 == 0)
-                    {
-                        oDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
-                    }                  
-                }
-                */
-
-
-                // Document settings - printed to Console
-                var maxHeight = oDoc.PageSetup.PageHeight - oDoc.PageSetup.BottomMargin;
-                var leftMargin = oDoc.PageSetup.LeftMargin;
-                var rightMargin = oDoc.PageSetup.RightMargin;
-                var pageWidth = oDoc.PageSetup.PageWidth;
-
-                Console.WriteLine("max height is {0}", maxHeight);
-                Console.WriteLine("pageWidth is {0}", pageWidth);
-                Console.WriteLine("left margin is {0}", leftMargin);
-                Console.WriteLine("right margin is {0}", rightMargin);
-                // set Word image size and position
-
-
-
-
-                    //float picHeight;
-                    //float ratio;
-                    ////float diff;
-                    //foreach (InlineShape inline in oDoc.InlineShapes)
-                    //{
-                    //    if (inline.Height >= 250)
-                    //    {
-                    //        picHeight = inline.Height;
-                    //        ratio = 250 / picHeight;
-                    //        inline.Height = 250;
-                    //        inline.Width = inline.Width * ratio;
-                        //}
-                        //pageWidth = 612
-                        // 2*72 for margins
-                        //612 - (2*72) = 468
-                        //if (inline.Width < 468)
-                        //{
-                        //    inline.
-                        //    diff = 468 - inline.Width;
-                        //    // center the pic
-
-                        //}
-                    //}
-                    //save the file
-                    //oDoc.SaveAs2(filename);
-
-                    //Close this form.
-                    //this.Close();
-                
+                    rngTarget0.InsertBefore(caption + "\v");
+                    oPara1.Format.SpaceAfter = 250;
+                    rngTarget1.InsertParagraphAfter();                
+                }               
             }
         }
     }
