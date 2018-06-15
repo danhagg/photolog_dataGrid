@@ -1,0 +1,10 @@
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\bin\v0.1\photolog.exe.config
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\bin\v0.1\photolog.exe
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\bin\v0.1\photolog.pdb
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.csprojAssemblyReference.cache
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.Form1.resources
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.Properties.Resources.resources
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.csproj.GenerateResource.cache
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.csproj.CoreCompileInputs.cache
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.exe
+C:\Users\dhaggerty\Documents\photolog_DG\photolog\obj\v0.1\photolog.pdb

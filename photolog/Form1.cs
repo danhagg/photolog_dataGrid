@@ -264,6 +264,10 @@ namespace photolog
                     Paragraph oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
                     Range rngTarget0 = oPara0.Range;
                     Range rngTarget1 = oPara1.Range;
+                    rngTarget0.Font.Size = 12;
+                    rngTarget0.Font.Name = "Tahoma";
+                    rngTarget1.Font.Size = 12;
+                    rngTarget1.Font.Name = "Tahoma";
                     object anchor = rngTarget1;
                     
                     //oPara.Range.ListFormat.ApplyNumberDefault();
@@ -279,12 +283,17 @@ namespace photolog
                     
                     Shape sh = pic.ConvertToShape();
                     sh.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoCTrue;
-                    
-                    sh.Height = 220;
 
-                    if (sh.Width >300)
+                    // Windows runs as default at 96dpi (display) Macs run as default at 72 dpi (display)
+                    // Assuming 72 points per inch
+                    // 3.5 inches is 3.5*72 = 252
+                    // 3.25 inches is 3.25*72 = 234
+
+                    sh.Height = 252;
+
+                    if (sh.Width >400)
                     {
-                        sh.Width = 300;
+                        sh.Width = 400;
                     }
 
                     sh.Left = (float)WdShapePosition.wdShapeCenter;
@@ -292,8 +301,8 @@ namespace photolog
 
                     //Write substring into Word doc with a bullet before it.
                     rngTarget0.InsertBefore(caption + "\v");
-                    oPara1.Format.SpaceAfter = 250;
-                    rngTarget1.InsertParagraphAfter();                
+                    oPara1.Format.SpaceAfter = 264;
+                    //rngTarget1.InsertParagraphAfter();                
                 }               
             }
         }
