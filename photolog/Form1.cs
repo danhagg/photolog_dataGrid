@@ -24,6 +24,7 @@ namespace photolog
         {
             // listView1 PROPERTIES... Details, List, Tiles
             listView1.View = System.Windows.Forms.View.Details;
+            listView1.View = System.Windows.Forms.View.Tile;
             //listView1.Columns.Add("", 250);
             //listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
             listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
