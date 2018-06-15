@@ -33,10 +33,6 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ind = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addDGButton = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -50,6 +46,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ind = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -88,32 +88,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(560, 796);
             this.dataGridView1.TabIndex = 11;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // imageColumn
-            // 
-            this.imageColumn.HeaderText = "Image";
-            this.imageColumn.Name = "imageColumn";
-            this.imageColumn.Width = 150;
-            // 
-            // Caption
-            // 
-            this.Caption.HeaderText = "Caption";
-            this.Caption.MaxInputLength = 350;
-            this.Caption.Name = "Caption";
-            this.Caption.Width = 350;
-            // 
-            // FilePath
-            // 
-            this.FilePath.HeaderText = "FilePath";
-            this.FilePath.Name = "FilePath";
-            this.FilePath.ReadOnly = true;
-            this.FilePath.Visible = false;
-            // 
-            // ind
-            // 
-            this.ind.HeaderText = "ind";
-            this.ind.Name = "ind";
-            this.ind.Visible = false;
             // 
             // addDGButton
             // 
@@ -231,7 +205,33 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(131, 13);
             this.label3.TabIndex = 24;
-            this.label3.Text = "Caption max Length = 350";
+            this.label3.Text = "Caption max Length = 220";
+            // 
+            // imageColumn
+            // 
+            this.imageColumn.HeaderText = "Image";
+            this.imageColumn.Name = "imageColumn";
+            this.imageColumn.Width = 150;
+            // 
+            // Caption
+            // 
+            this.Caption.HeaderText = "Caption";
+            this.Caption.MaxInputLength = 220;
+            this.Caption.Name = "Caption";
+            this.Caption.Width = 350;
+            // 
+            // FilePath
+            // 
+            this.FilePath.HeaderText = "FilePath";
+            this.FilePath.Name = "FilePath";
+            this.FilePath.ReadOnly = true;
+            this.FilePath.Visible = false;
+            // 
+            // ind
+            // 
+            this.ind.HeaderText = "ind";
+            this.ind.Name = "ind";
+            this.ind.Visible = false;
             // 
             // Form1
             // 
@@ -280,13 +280,13 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridViewImageColumn imageColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Caption;
         private System.Windows.Forms.DataGridViewTextBoxColumn FilePath;
         private System.Windows.Forms.DataGridViewTextBoxColumn ind;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label3;
     }
 }
 
