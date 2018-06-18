@@ -1,1 +1,5 @@
-#
+# standard
+.vs/photolog/v15/Server/sqlite3/storage.ide
+.vs/photolog/v15/Server/sqlite3/storage.ide-shm
+.vs/photolog/v15/Server/sqlite3/storage.ide-wal
+.vs/photolog/v15/.suo
