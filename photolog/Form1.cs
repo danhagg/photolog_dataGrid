@@ -6,7 +6,7 @@ using Word = Microsoft.Office.Interop.Word;
 using Microsoft.Office.Interop.Word;
 using System.Reflection;
 using System.Diagnostics;
-
+using System.Data;
 
 
 namespace photolog
@@ -24,7 +24,7 @@ namespace photolog
         {
             // listView1 PROPERTIES... Details, List, Tiles
             listView1.View = System.Windows.Forms.View.Details;
-            listView1.View = System.Windows.Forms.View.Tile;
+            //listView1.View = System.Windows.Forms.View.Tile;
             //listView1.Columns.Add("", 250);
             //listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
             listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
@@ -305,6 +305,47 @@ namespace photolog
                     oPara1.Format.SpaceAfter = 264;
                     //rngTarget1.InsertParagraphAfter();                
                 }               
+            }
+        }
+
+
+        // METHOD - create DataTable
+        private System.Data.DataTable GetDataTableFromDGV(DataGridView dgv)
+        {
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("xmlBitmap", typeof(string));
+            dt.Columns.Add("xmlCaption", typeof(string));
+            dt.Columns.Add("xmlPath", typeof(string));
+            dt.Columns.Add("xmlImage", typeof(string));
+
+            object[] cellValues = new object[dgv.Columns.Count];
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                for (int i = 0; i < row.Cells.Count; i++)
+                {
+                    cellValues[i] = row.Cells[i].Value;
+                }
+                dt.Rows.Add(cellValues);
+            }
+
+            return dt;
+        }
+        private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Data.DataTable dT = GetDataTableFromDGV(dataGridView1);
+            DataSet dS = new DataSet();
+            dS.Tables.Add(dT);
+
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*";
+            saveFileDialog.Title = "Save work as .XML file";
+            //    saveFileDialog.FilterIndex = 2;
+            //    saveFileDialog.RestoreDirectory = true;
+            //    saveFileDialog.ShowDialog();
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                dS.WriteXml(File.Open(saveFileDialog.FileName, FileMode.CreateNew));
             }
         }
     }
