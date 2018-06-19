@@ -271,7 +271,6 @@ namespace photolog
                     rngTarget1.Font.Name = "Tahoma";
                     object anchor = rngTarget1;
                     
-                    //oPara.Range.ListFormat.ApplyNumberDefault();
                     rngTarget0.ListFormat.ApplyNumberDefault();
 
 
@@ -308,45 +307,104 @@ namespace photolog
             }
         }
 
+        
+        // Create Datable of ListView
+        private System.Data.DataTable GetDataTableFromLV(ListView lv)
+        {
+            System.Data.DataTable dt1 = new System.Data.DataTable();
+            dt1.Columns.Add("listView1Path", typeof(string));
+            dt1.Columns.Add("listView1ImageNumber", typeof(string));
 
-        // METHOD - create DataTable
+            object[] cellValues1 = new object[lv.Columns.Count];
+            foreach (ListViewItem item in lv.Items)
+            {
+                for (int i = 0; i < item.SubItems.Count; i++)
+                {
+                    cellValues1[i] = item.SubItems[i].Text;
+                }
+                dt1.Rows.Add(cellValues1);
+            }
+            return dt1;
+        }
+
+
+        // Create Datable of datagridViewView
         private System.Data.DataTable GetDataTableFromDGV(DataGridView dgv)
         {
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("xmlBitmap", typeof(string));
-            dt.Columns.Add("xmlCaption", typeof(string));
-            dt.Columns.Add("xmlPath", typeof(string));
-            dt.Columns.Add("xmlImage", typeof(string));
+            System.Data.DataTable dt2 = new System.Data.DataTable();
+            dt2.Columns.Add("datGridView1Bitmap", typeof(string));
+            dt2.Columns.Add("datGridView1Caption", typeof(string));
+            dt2.Columns.Add("datGridView1Path", typeof(string));
+            dt2.Columns.Add("datGridView1ImageNumber", typeof(string));
 
-            object[] cellValues = new object[dgv.Columns.Count];
+            object[] cellValues2 = new object[dgv.Columns.Count];
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                for (int i = 0; i < row.Cells.Count; i++)
+                for (int ii = 0; ii < row.Cells.Count; ii++)
                 {
-                    cellValues[i] = row.Cells[i].Value;
+                    cellValues2[ii] = row.Cells[ii].Value;
                 }
-                dt.Rows.Add(cellValues);
+                dt2.Rows.Add(cellValues2);
             }
-
-            return dt;
+            return dt2;
         }
+
+
+        // BUTTON - save method
         private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Data.DataTable dT = GetDataTableFromDGV(dataGridView1);
             DataSet dS = new DataSet();
-            dS.Tables.Add(dT);
-
+            System.Data.DataTable dT1 = GetDataTableFromLV(listView1);
+            System.Data.DataTable dT2 = GetDataTableFromDGV(dataGridView1);
+            dS.Tables.Add(dT1);
+            dS.Tables.Add(dT2);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*";
             saveFileDialog.Title = "Save work as .XML file";
-            //    saveFileDialog.FilterIndex = 2;
-            //    saveFileDialog.RestoreDirectory = true;
-            //    saveFileDialog.ShowDialog();
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 dS.WriteXml(File.Open(saveFileDialog.FileName, FileMode.CreateNew));
             }
+        }
+
+        private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //FolderBrowserDialog fbd = new FolderBrowserDialog();
+            //fbd.Description = "Choose an your photolog .XML file";
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            //ofd.Description = "Choose an your photolog .XML file";
+            
+            ofd.Filter = "XML Files (*.xml)|*.xml";
+            ofd.FilterIndex = 1;
+            ofd.Multiselect = false;
+
+            // check user selects pass
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                // clear previous list
+                listView1.Items.Clear();
+            }
+
+
+            // IMGLISTS TO HOLD IMAGES
+            ImageList imgList1 = new ImageList();
+            imgList1.ColorDepth = ColorDepth.Depth16Bit;
+            imgList1.ImageSize = new Size(150, 150);
+            listView1.SmallImageList = imgList1;
+
+            //string[] files = Directory.GetFiles(fbd.SelectedPath);
+            //string[] xmlFile = File.re;
+
+            //for (int i = 0; i < files.Length; i++)
+            //{
+            //    string fileNameFull = Path.GetFullPath(files[i]);
+            //    ListViewItem item = new ListViewItem(fileNameFull, i);
+            //    imgList1.Images.Add(Image.FromFile(files[i]));
+            //    item.SubItems.Add(i.ToString());
+            //    listView1.Items.Add(item);
+            
         }
     }
 }
