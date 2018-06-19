@@ -7,7 +7,7 @@ using Microsoft.Office.Interop.Word;
 using System.Reflection;
 using System.Diagnostics;
 using System.Data;
-
+using System.Xml.Linq;
 
 namespace photolog
 {
@@ -394,8 +394,45 @@ namespace photolog
             imgList1.ImageSize = new Size(150, 150);
             listView1.SmallImageList = imgList1;
 
+            // Add required columns
+            listView1.Columns.Add("listView1Path");
+            listView1.Columns.Add("listView1ImageNumber");
+
             //string[] files = Directory.GetFiles(fbd.SelectedPath);
-            //string[] xmlFile = File.re;
+            //string fileNameFull = Path.GetFullPath(files[i]);
+
+            //string[] files1 = Directory.GetFiles(ofd.);
+            //string fileNameFull2 = Path.GetFullPath(ofd.ToString());
+            string folder2 = Path.GetDirectoryName(ofd.ToString());
+            string[] files2 = Directory.GetFiles(ofd.ToString());
+            Console.WriteLine(folder2);
+
+            XDocument doc = XDocument.Load(ofd.FileName);
+
+
+            foreach (var dm in doc.Descendants("Table1"))
+            {
+                string fileNameFull = dm.Element("listView1Path").Value;
+                var i = dm.Element("listView1ImageNumber").Value;
+                //ListViewItem item = new ListViewItem(fileNameFull, i);
+                //imgList1.Images.Add(Image.FromFile(files2[Int32.Parse(i)]));
+                //item.SubItems.Add(i.ToString());
+                //listView1.Items.Add(item);
+
+
+
+                //ListViewItem item = new ListViewItem(new string[]
+                //{
+                //    dm.Element("listView1Path").Value,
+                //    dm.Element("listView1ImageNumber").Value,
+                //});
+                //string fileNameFull2 = Path.GetFullPath(files2[0]);
+                //imgList1.Images.Add(Image.FromFile(files2[0]));
+                //item.SubItems.Add(dm.Element("listView1ImageNumber").Value.ToString());
+                //listView1.Items.Add(item);
+                //Console.WriteLine(item);
+            }
+
 
             //for (int i = 0; i < files.Length; i++)
             //{
@@ -404,7 +441,7 @@ namespace photolog
             //    imgList1.Images.Add(Image.FromFile(files[i]));
             //    item.SubItems.Add(i.ToString());
             //    listView1.Items.Add(item);
-            
+
         }
     }
 }
