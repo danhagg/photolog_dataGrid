@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Data;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace photolog
 {
@@ -68,7 +69,7 @@ namespace photolog
             for (int i = 0; i < files.Length; i++)
             {
                 string fileNameFull = Path.GetFullPath(files[i]);
-                ListViewItem item = new ListViewItem(fileNameFull, i);
+                ListViewItem item = new ListViewItem(fileNameFull,i);
                 imgList1.Images.Add(Image.FromFile(files[i]));
                 item.SubItems.Add(i.ToString());
                 listView1.Items.Add(item);
@@ -431,39 +432,48 @@ namespace photolog
                 }
                 Console.WriteLine(parentFolder);
 
+
+                string[] files = Directory.GetFiles(@"C:\Users\dhaggerty\Desktop\images");
+                List<int> eyes = new List<int>();
+                List<string> pics = new List<string>();
                 foreach (var dm1 in doc.Descendants("Table2"))
                 {
-                    
-                    string fileNameFull = dm1.Element("listView1Path").Value;
-                    int i = Int32.Parse(dm1.Element("listView1ImageNumber").Value);
-                    Console.WriteLine(fileNameFull);
-                    Console.WriteLine(i);
+                    //int eye = Int32.Parse(dm1.Element("listView1ImageNumber").Value);
+                    eyes.Add(Int32.Parse(dm1.Element("listView1ImageNumber").Value));
+                    pics.Add(dm1.Element("listView1Path").Value);
+                }
+                eyes.ForEach(Console.WriteLine);
+                pics.ForEach(Console.WriteLine);
 
-                    ListViewItem item = new ListViewItem(fileNameFull, i);
-                    //imgList1.Images.Add(Image.FromFile(parentFolder[Int32.Parse(i)]));
-                    imgList1.Images.Add(Image.FromFile(fileNameFull));
-                    item.SubItems.Add(i.ToString());
-                    listView1.Items.Add(item);
-                    Console.WriteLine("item", item.ToString());
 
-                    //for (int i = 0; i < files.Length; i++)
-                    //{
-                    //    string fileNameFull = Path.GetFullPath(files[i]);
-                    //    ListViewItem item = new ListViewItem(fileNameFull, i);
-                    //    imgList1.Images.Add(Image.FromFile(files[i]));
-                    //    item.SubItems.Add(i.ToString());
-                    //    listView1.Items.Add(item);
 
+
+                // change following... I know just need to loop over the two lists and add files that way
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (eyes.Contains(i))
+                    {
+                        string fileNameFull = Path.GetFullPath(files[i]);
+                        ListViewItem item = new ListViewItem(fileNameFull, i);
+                        imgList1.Images.Add(Image.FromFile(files[i]));
+                        item.SubItems.Add(i.ToString());
+                        listView1.Items.Add(item);
+                    }
                 }
 
-                //foreach (var dm2 in doc.Descendants("Table2"))
-                //{
 
-                //}
-
-
+                foreach (var dm2 in doc.Descendants("Table3"))
+                {
+                    //imgList1.Images.Add(Image.FromFile(files[i]));
+                    //var img = dm2.Element("dataGridView1Bitmap").Value;
+                    Image img = Image.FromFile(dm2.Element("dataGridView1Path").Value.ToString());
+                    var capt = dm2.Element("dataGridView1Caption").Value;
+                    var pth = dm2.Element("dataGridView1Path").Value;
+                    var ind = dm2.Element("dataGridView1ImageNumber").Value;
+                    //dataGridView1.Rows.Add(img, capt, pth, ind);
+                    dataGridView1.Rows.Add(img, capt, pth);
+                }
             }
-
         }   
     }
 }
