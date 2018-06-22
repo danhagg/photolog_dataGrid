@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Data;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace photolog
 {
@@ -430,7 +432,6 @@ namespace photolog
                 {
                     string parentFolder = dm0.Element("parentFolder").Value;
                 }
-                Console.WriteLine(parentFolder);
 
 
                 string[] files = Directory.GetFiles(@"C:\Users\dhaggerty\Desktop\images");
@@ -442,25 +443,21 @@ namespace photolog
                     eyes.Add(Int32.Parse(dm1.Element("listView1ImageNumber").Value));
                     pics.Add(dm1.Element("listView1Path").Value);
                 }
-                eyes.ForEach(Console.WriteLine);
-                pics.ForEach(Console.WriteLine);
+                //eyes.ForEach(Console.WriteLine);
+                //pics.ForEach(Console.WriteLine);
 
-
-
-
-                // change following... I know just need to loop over the two lists and add files that way
-                for (int i = 0; i < files.Length; i++)
+                int iii = 0;
+                foreach (var nw in pics.Zip(eyes, Tuple.Create))
                 {
-                    if (eyes.Contains(i))
-                    {
-                        string fileNameFull = Path.GetFullPath(files[i]);
-                        ListViewItem item = new ListViewItem(fileNameFull, i);
-                        imgList1.Images.Add(Image.FromFile(files[i]));
-                        item.SubItems.Add(i.ToString());
-                        listView1.Items.Add(item);
-                    }
+                    Console.WriteLine(nw.Item1 + " " + nw.Item2 + " " + iii.ToString());
+                    ListViewItem item = new ListViewItem(nw.Item1, iii);
+                    Image newImage = Image.FromFile(nw.Item1);
+                    imgList1.Images.Add(newImage);
+                    item.SubItems.Add(nw.Item2.ToString());
+                    listView1.Items.Add(item);
+                    iii++;
+ 
                 }
-
 
                 foreach (var dm2 in doc.Descendants("Table3"))
                 {
@@ -470,8 +467,8 @@ namespace photolog
                     var capt = dm2.Element("dataGridView1Caption").Value;
                     var pth = dm2.Element("dataGridView1Path").Value;
                     var ind = dm2.Element("dataGridView1ImageNumber").Value;
-                    //dataGridView1.Rows.Add(img, capt, pth, ind);
-                    dataGridView1.Rows.Add(img, capt, pth);
+                    dataGridView1.Rows.Add(img, capt, pth, ind);
+                    //dataGridView1.Rows.Add(img, capt, pth);
                 }
             }
         }   
