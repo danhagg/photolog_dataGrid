@@ -48,12 +48,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.dataGridView0 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ind = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView0)).BeginInit();
             this.SuspendLayout();
             // 
             // listView1
@@ -63,7 +66,7 @@
             this.columnHeader2});
             this.listView1.Location = new System.Drawing.Point(12, 27);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(241, 796);
+            this.listView1.Size = new System.Drawing.Size(96, 796);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
@@ -82,19 +85,18 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.imageColumn,
             this.Caption,
-            this.FilePath,
-            this.ind});
-            this.dataGridView1.Location = new System.Drawing.Point(324, 27);
+            this.FilePath});
+            this.dataGridView1.Location = new System.Drawing.Point(556, 27);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(766, 796);
+            this.dataGridView1.Size = new System.Drawing.Size(534, 796);
             this.dataGridView1.TabIndex = 11;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // addDGButton
             // 
             this.addDGButton.BackColor = System.Drawing.Color.ForestGreen;
-            this.addDGButton.Location = new System.Drawing.Point(260, 77);
+            this.addDGButton.Location = new System.Drawing.Point(492, 29);
             this.addDGButton.Name = "addDGButton";
             this.addDGButton.Size = new System.Drawing.Size(58, 23);
             this.addDGButton.TabIndex = 12;
@@ -104,7 +106,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(259, 249);
+            this.button3.Location = new System.Drawing.Point(491, 201);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(59, 23);
             this.button3.TabIndex = 15;
@@ -155,7 +157,7 @@
             // 
             // upButton
             // 
-            this.upButton.Location = new System.Drawing.Point(260, 162);
+            this.upButton.Location = new System.Drawing.Point(492, 114);
             this.upButton.Name = "upButton";
             this.upButton.Size = new System.Drawing.Size(58, 23);
             this.upButton.TabIndex = 17;
@@ -165,7 +167,7 @@
             // 
             // downButton
             // 
-            this.downButton.Location = new System.Drawing.Point(260, 192);
+            this.downButton.Location = new System.Drawing.Point(492, 144);
             this.downButton.Name = "downButton";
             this.downButton.Size = new System.Drawing.Size(58, 23);
             this.downButton.TabIndex = 18;
@@ -176,7 +178,7 @@
             // removeDGButton
             // 
             this.removeDGButton.BackColor = System.Drawing.Color.Red;
-            this.removeDGButton.Location = new System.Drawing.Point(260, 107);
+            this.removeDGButton.Location = new System.Drawing.Point(492, 59);
             this.removeDGButton.Name = "removeDGButton";
             this.removeDGButton.Size = new System.Drawing.Size(58, 23);
             this.removeDGButton.TabIndex = 19;
@@ -225,9 +227,36 @@
             this.label3.TabIndex = 24;
             this.label3.Text = "Caption max Length = 220";
             // 
+            // dataGridView0
+            // 
+            this.dataGridView0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView0.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2});
+            this.dataGridView0.Location = new System.Drawing.Point(115, 27);
+            this.dataGridView0.Name = "dataGridView0";
+            this.dataGridView0.ShowRowErrors = false;
+            this.dataGridView0.Size = new System.Drawing.Size(299, 435);
+            this.dataGridView0.TabIndex = 25;
+            this.dataGridView0.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView0_CellContentDoubleClick);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Column1";
+            this.Column1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 150;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Column2";
+            this.Column2.Name = "Column2";
+            this.Column2.Visible = false;
+            // 
             // imageColumn
             // 
             this.imageColumn.HeaderText = "Image";
+            this.imageColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
             this.imageColumn.Name = "imageColumn";
             this.imageColumn.Width = 150;
             // 
@@ -243,11 +272,7 @@
             this.FilePath.HeaderText = "FilePath";
             this.FilePath.Name = "FilePath";
             this.FilePath.ReadOnly = true;
-            // 
-            // ind
-            // 
-            this.ind.HeaderText = "ind";
-            this.ind.Name = "ind";
+            this.FilePath.Visible = false;
             // 
             // Form1
             // 
@@ -255,6 +280,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1035, 835);
+            this.Controls.Add(this.dataGridView0);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label2);
@@ -274,6 +300,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView0)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -301,10 +328,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolStripMenuItem resumeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProjectToolStripMenuItem;
+        private System.Windows.Forms.DataGridView dataGridView0;
+        private System.Windows.Forms.DataGridViewImageColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewImageColumn imageColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Caption;
         private System.Windows.Forms.DataGridViewTextBoxColumn FilePath;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ind;
     }
 }
 

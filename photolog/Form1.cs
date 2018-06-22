@@ -10,10 +10,12 @@ using System.Data;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Drawing.Drawing2D;
 
 namespace photolog
 {
+
+
     public partial class Form1 : Form
     {
         public Form1()
@@ -35,13 +37,23 @@ namespace photolog
             listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
             this.Load += new EventHandler(Form1_Load);
 
-            // DataGridView
+            // DataGridView0
+            dataGridView0.RowTemplate.Height = 150;
+            dataGridView0.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView0.AllowUserToAddRows = false;
+            dataGridView0.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            // DataGridView1
             dataGridView1.RowTemplate.Height = 150;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         }
 
+        //enum MyEnum
+        //{
+
+        //}
 
         // BUTTON - Open Folder
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -54,29 +66,56 @@ namespace photolog
 
             // check user selects pass
             if (fbd.ShowDialog() == DialogResult.OK)
-
-                // clear previous list
+            { // clear previous list
                 listView1.Items.Clear();
 
-            // IMGLISTS TO HOLD IMAGES
-            ImageList imgList1 = new ImageList();
-            imgList1.ColorDepth = ColorDepth.Depth16Bit;
-            imgList1.ImageSize = new Size(150, 150);
-            listView1.SmallImageList = imgList1;
+                // IMGLISTS TO HOLD IMAGES
+                ImageList imgList1 = new ImageList();
+                imgList1.ColorDepth = ColorDepth.Depth16Bit;
+                imgList1.ImageSize = new Size(150, 150);
+                listView1.SmallImageList = imgList1;
 
-            string[] files = Directory.GetFiles(fbd.SelectedPath);
-            StringA = fbd.SelectedPath;
-            Console.WriteLine(StringA);
+                string[] files = Directory.GetFiles(fbd.SelectedPath);
+                Console.WriteLine(files);
 
-            for (int i = 0; i < files.Length; i++)
-            {
-                string fileNameFull = Path.GetFullPath(files[i]);
-                ListViewItem item = new ListViewItem(fileNameFull,i);
-                imgList1.Images.Add(Image.FromFile(files[i]));
-                item.SubItems.Add(i.ToString());
-                listView1.Items.Add(item);
 
+
+
+                /*
+                int iii = 0;
+                foreach (var nw in pics.Zip(eyes, Tuple.Create))
+                {
+                    Console.WriteLine(nw.Item1 + " " + nw.Item2 + " " + iii.ToString());
+                    ListViewItem item = new ListViewItem(nw.Item1, iii);
+                    Image newImage = Image.FromFile(nw.Item1);
+                    imgList1.Images.Add(newImage);
+                    item.SubItems.Add(nw.Item2.ToString());
+                    listView1.Items.Add(item);
+                    iii++;
+
+                }
+                */
+
+
+                for (int i = 0; i < files.Length; i++)
+
+                    
+                {
+                    string fileNameFull = Path.GetFullPath(files[i]);
+                    Image img = Image.FromFile(fileNameFull);
+                    
+                    Object[] row = new object[] {img, fileNameFull };
+                    dataGridView0.Rows.Add(row);
+
+
+                    ListViewItem item = new ListViewItem(fileNameFull, i);
+                    imgList1.Images.Add(Image.FromFile(files[i]));
+                    item.SubItems.Add(i.ToString());
+                    listView1.Items.Add(item);
+
+                }
             }
+               
         }
 
 
@@ -107,7 +146,7 @@ namespace photolog
 
 
 
-        // View Full-size Image
+        // View Full-size Image - listView1
         void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ListViewHitTestInfo info = listView1.HitTest(e.X, e.Y);
@@ -126,17 +165,55 @@ namespace photolog
         }
 
 
-        // METHOD - Move selected items from listView to dataGridView
-        private void list_to_grid(ListView source, DataGridView target)
+        // View Full-size Image - dataGridView
+        private void dataGridView0_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (listView1.SelectedItems.Count > 0)
+            String txt = dataGridView0.CurrentRow.Cells[1].Value.ToString();
+            if (txt != null)
             {
-                var item = listView1.SelectedItems[0];
-                var img = item.ImageList.Images[item.ImageIndex];
-                var pth = item.Text;
-                var ind = item.ImageIndex;
-                dataGridView1.Rows.Add(img, "Insert Caption Here", pth, ind);
-                listView1.SelectedItems[0].Remove();
+                Image newImage = Image.FromFile(txt);
+                Process.Start(txt);
+            }
+            else
+            {
+                MessageBox.Show("No Item is selected");
+            }
+        }
+
+        private void listView1_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            e.DrawDefault = true;
+            e.Graphics.DrawRectangle(Pens.Red, e.Bounds);
+        }
+
+
+        // METHOD - Move selected items from grid0 to grid1
+        private void grid0_to_grid1(DataGridView source, DataGridView target)
+        {
+            foreach (DataGridViewRow row in dataGridView0.SelectedRows)
+            {
+                String pth = dataGridView0.CurrentRow.Cells[1].Value.ToString();
+                //Console.WriteLine("that {0}", pth);
+                Image img = Image.FromFile(pth);
+                dataGridView1.Rows.Add(img, "Insert Caption Here", pth);
+                dataGridView0.Rows.Remove(row);
+                dataGridView0.ClearSelection();
+            }
+            dgLength();
+        }
+
+
+        // METHOD - Move selected items from grid1 to grid0
+        private void grid1_to_grid0(DataGridView source, DataGridView target)
+        {
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                String pth = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+                Console.WriteLine("that {0}", pth);
+                Image img = Image.FromFile(pth);
+                dataGridView0.Rows.Add(img, pth);
+                dataGridView1.Rows.Remove(row);
+                dataGridView1.ClearSelection();
             }
             dgLength();
         }
@@ -145,7 +222,7 @@ namespace photolog
         // BUTTON - Move selected items from listView to dataGridView
         private void addDGButton_Click(object sender, EventArgs e)
         {
-            list_to_grid(listView1, dataGridView1);
+            grid0_to_grid1(dataGridView0, dataGridView1);
         }
 
 
@@ -158,24 +235,55 @@ namespace photolog
             {
                 patherooney = row.Cells[2].Value.ToString();
                 indexerooney = row.Cells[3].Value.ToString();
+                row.Cells[0].Value = Image.FromFile(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg");
 
                 // Need to match the index to put back the correct image
                 ListViewItem item = new ListViewItem(patherooney, Int32.Parse(indexerooney));
                 item.SubItems.Add(indexerooney.ToString());
                 listView1.Items.Add(item);
+                //listView1.Sort();
 
                 // remove from dataGridView
+                /*
                 dataGridView1.Rows.Remove(row);
                 dataGridView1.ClearSelection();
+                */
             }
             dgLength();
         }
 
 
+        //// METHOD - Move selected items from dataGridView to listView
+        //private void grid_to_list(DataGridView source, ListView target)
+        //{
+        //    string patherooney;
+        //    string indexerooney;
+        //    foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+        //    {
+        //        patherooney = row.Cells[2].Value.ToString();
+        //        indexerooney = row.Cells[3].Value.ToString();
+        //        row.Cells[0].Value = Image.FromFile(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg");
+
+        //        // Need to match the index to put back the correct image
+        //        ListViewItem item = new ListViewItem(patherooney, Int32.Parse(indexerooney));
+        //        item.SubItems.Add(indexerooney.ToString());
+        //        listView1.Items.Add(item);
+        //        //listView1.Sort();
+
+        //        // remove from dataGridView
+        //        /*
+        //        dataGridView1.Rows.Remove(row);
+        //        dataGridView1.ClearSelection();
+        //        */
+        //    }
+        //    dgLength();
+        //}
+
+
         // BUTTON - Move selected items from dataGridView to listView
         private void removeDGButton_Click(object sender, EventArgs e)
         {
-            grid_to_list(dataGridView1, listView1);
+            grid1_to_grid0(dataGridView1, dataGridView0);
         }
 
 
@@ -427,11 +535,12 @@ namespace photolog
                 // Add required columns
                 //listView1.Columns.Add("listView1Path");
                 //listView1.Columns.Add("listView1ImageNumber");
-
-                foreach (var dm0 in doc.Descendants("Table1"))
-                {
-                    string parentFolder = dm0.Element("parentFolder").Value;
-                }
+                //string parentFolder = doc.Element("parentFolder").Value;
+                //Console.WriteLine(parentFolder);
+                //foreach (var dm0 in doc.Descendants("Table1"))
+                //{
+                //    string parentFolder = dm0.Element("parentFolder").Value;
+                //}
 
 
                 string[] files = Directory.GetFiles(@"C:\Users\dhaggerty\Desktop\images");
@@ -471,7 +580,7 @@ namespace photolog
                     //dataGridView1.Rows.Add(img, capt, pth);
                 }
             }
-        }   
+        }
     }
 }
 
