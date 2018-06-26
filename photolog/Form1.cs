@@ -18,6 +18,7 @@ namespace photolog
         public Form1()
         {
             InitializeComponent();
+            
         }
 
         string StringA { get; set; }
@@ -26,14 +27,11 @@ namespace photolog
         // Set Form listView and datGridView properties on load
         private void Form1_Load(object sender, EventArgs e)
         {
-
-            // listView1 PROPERTIES... Details, List, Tiles
-            listView1.View = System.Windows.Forms.View.Details;
-            //listView1.View = System.Windows.Forms.View.Tile;
-            //listView1.Columns.Add("", 250);
-            //listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
-            listView1.MouseDoubleClick += new MouseEventHandler(listView1_MouseDoubleClick);
             this.Load += new EventHandler(Form1_Load);
+
+            // Turn off form resizing and maximize
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
 
             // DataGridView0
             dataGridView0.RowTemplate.Height = 150;
@@ -45,14 +43,13 @@ namespace photolog
             dataGridView1.RowTemplate.Height = 150;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+ 
         }
 
-       
 
-        
-
-        // BUTTON - Open Folder
+        // MENU - Open Folder
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create instance of folderBrowserDialog class
@@ -60,73 +57,43 @@ namespace photolog
             // set root folder
             // fbd.RootFolder = Environment.SpecialFolder.MyDocuments;
             fbd.Description = "Choose an UNZIPPED folder of pictures to upload";
-
+           
             // check user selects pass
             if (fbd.ShowDialog() == DialogResult.OK)
-            { // clear previous list
-                listView1.Items.Clear();
+            {
+                // clear previous data
+                // add code
 
-                // IMGLISTS TO HOLD IMAGES
-                ImageList imgList1 = new ImageList();
-                imgList1.ColorDepth = ColorDepth.Depth16Bit;
-                imgList1.ImageSize = new Size(150, 150);
-                listView1.SmallImageList = imgList1;
+                string[] patterns = new[] {"*.jpg", "*.jpeg", "*.jpe", "*.jif", "*.jfif", "*.jfi", "*.webp", "*.gif", "*.png", "*.apng", "*.bmp", "*.dib", "*.tiff", "*.tif", "*.svg", "*.svgz", "*.ico", "*.xbm"};
+                string[] files = CustomDirectoryTools.GetFiles(fbd.SelectedPath, patterns);
 
-                string[] files = Directory.GetFiles(fbd.SelectedPath);
-                Console.WriteLine(files);
-
-
-
-
-                /*
-                int iii = 0;
-                foreach (var nw in pics.Zip(eyes, Tuple.Create))
+                if (files.Length == 0)
                 {
-                    Console.WriteLine(nw.Item1 + " " + nw.Item2 + " " + iii.ToString());
-                    ListViewItem item = new ListViewItem(nw.Item1, iii);
-                    Image newImage = Image.FromFile(nw.Item1);
-                    imgList1.Images.Add(newImage);
-                    item.SubItems.Add(nw.Item2.ToString());
-                    listView1.Items.Add(item);
-                    iii++;
-
+                    MessageBox.Show("No images in folder");
                 }
-                */
 
-
-                for (int i = 0; i < files.Length; i++)
-
-                    
+                // iterate over selected folders files and load ALL images to dataGridView0
+                for (int i = 0; i < files.Length; i++)                  
                 {
                     string fileNameFull = Path.GetFullPath(files[i]);
                     Image img = Image.FromFile(fileNameFull);
-                    
-                    Object[] row = new object[] {img, fileNameFull };
+                    Object[] row = new object[] {img, "", fileNameFull };
                     dataGridView0.Rows.Add(row);
-                    Console.WriteLine(img);
-   
-
-                    ListViewItem item = new ListViewItem(fileNameFull, i);
-                    imgList1.Images.Add(Image.FromFile(files[i]));
-                    item.SubItems.Add(i.ToString());
-                    listView1.Items.Add(item);
-
                 }
             }
                
         }
 
 
-        // calculate dataGridView1 Length
+        // METHOD - calculate dataGridView1 Length
         private void dgLength()
         {
             int dgRows = dataGridView1.Rows.Count;
             textBox1.Text = dgRows.ToString();
-
         }
 
 
-        // calculate caption Length
+        // METHOD - calculate caption Length
         private void capLength()
         {
             if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
@@ -135,37 +102,31 @@ namespace photolog
                 textBox2.Text = cap.Length.ToString();
             }
         }
-
-
+        
+        // CELL CLICK - Get caption length
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             capLength();
         }
 
 
-
-        // View Full-size Image - listView1
-        void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        // IMAGE CLICK - View larger image, dataGridView1
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            ListViewHitTestInfo info = listView1.HitTest(e.X, e.Y);
-            ListViewItem item = info.Item;
-
-            if (item != null)
+            String txt = dataGridView1.CurrentRow.Cells[1].Value.ToString();
+            if (txt != null)
             {
-                Image newImage = Image.FromFile(item.Text);
-                Process.Start(item.Text);
+                Image newImage = Image.FromFile(txt);
+                Process.Start(txt);
             }
             else
             {
-                this.listView1.SelectedItems.Clear();
                 MessageBox.Show("No Item is selected");
             }
         }
 
 
-
-
-        // View Full-size Image - dataGridView
+        // IMAGE CLICK - View larger image, dataGridView0
         private void dataGridView0_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             String txt = dataGridView0.CurrentRow.Cells[1].Value.ToString();
@@ -181,38 +142,12 @@ namespace photolog
         }
 
 
-
-        private void dataGridView0_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            String txt = dataGridView0.CurrentRow.Cells[1].Value.ToString();
-            if (txt != null)
-            {
-                string fName = Path.GetFileName(txt);
-                System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
-                ToolTip1.Show("yo", dataGridView0);
-            }
-            else
-            {
-                MessageBox.Show("No Item is selected");
-            }
-        }
-
-
-
-        private void listView1_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            e.DrawDefault = true;
-            e.Graphics.DrawRectangle(Pens.Red, e.Bounds);
-        }
-
-
         // METHOD - Move selected items from grid0 to grid1
         private void grid0_to_grid1(DataGridView source, DataGridView target)
         {
             foreach (DataGridViewRow row in dataGridView0.SelectedRows)
             {
-                String pth = dataGridView0.CurrentRow.Cells[1].Value.ToString();
-                //Console.WriteLine("that {0}", pth);
+                String pth = dataGridView0.CurrentRow.Cells[2].Value.ToString();
                 Image img = Image.FromFile(pth);
                 dataGridView1.Rows.Add(img, "Insert Caption Here", pth);
                 dataGridView0.Rows.Remove(row);
@@ -228,9 +163,8 @@ namespace photolog
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
                 String pth = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                Console.WriteLine("that {0}", pth);
                 Image img = Image.FromFile(pth);
-                dataGridView0.Rows.Add(img, pth);
+                dataGridView0.Rows.Add(img, "", pth);
                 dataGridView1.Rows.Remove(row);
                 dataGridView1.ClearSelection();
             }
@@ -238,68 +172,14 @@ namespace photolog
         }
 
 
-        // BUTTON - Move selected items from listView to dataGridView
+        // BUTTON - Move selected items from dataGridView0 to dataGridView1
         private void addDGButton_Click(object sender, EventArgs e)
         {
             grid0_to_grid1(dataGridView0, dataGridView1);
         }
 
 
-        // METHOD - Move selected items from dataGridView to listView
-        private void grid_to_list(DataGridView source, ListView target)
-        {
-            string patherooney;
-            string indexerooney;
-            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
-            {
-                patherooney = row.Cells[2].Value.ToString();
-                indexerooney = row.Cells[3].Value.ToString();
-                row.Cells[0].Value = Image.FromFile(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg");
-
-                // Need to match the index to put back the correct image
-                ListViewItem item = new ListViewItem(patherooney, Int32.Parse(indexerooney));
-                item.SubItems.Add(indexerooney.ToString());
-                listView1.Items.Add(item);
-                //listView1.Sort();
-
-                // remove from dataGridView
-                /*
-                dataGridView1.Rows.Remove(row);
-                dataGridView1.ClearSelection();
-                */
-            }
-            dgLength();
-        }
-
-
-        //// METHOD - Move selected items from dataGridView to listView
-        //private void grid_to_list(DataGridView source, ListView target)
-        //{
-        //    string patherooney;
-        //    string indexerooney;
-        //    foreach (DataGridViewRow row in dataGridView1.SelectedRows)
-        //    {
-        //        patherooney = row.Cells[2].Value.ToString();
-        //        indexerooney = row.Cells[3].Value.ToString();
-        //        row.Cells[0].Value = Image.FromFile(@"C:\Users\dhaggerty\Desktop\images\bayou.jpg");
-
-        //        // Need to match the index to put back the correct image
-        //        ListViewItem item = new ListViewItem(patherooney, Int32.Parse(indexerooney));
-        //        item.SubItems.Add(indexerooney.ToString());
-        //        listView1.Items.Add(item);
-        //        //listView1.Sort();
-
-        //        // remove from dataGridView
-        //        /*
-        //        dataGridView1.Rows.Remove(row);
-        //        dataGridView1.ClearSelection();
-        //        */
-        //    }
-        //    dgLength();
-        //}
-
-
-        // BUTTON - Move selected items from dataGridView to listView
+        // BUTTON - Move selected items from dataGridView1 to dataGridView0
         private void removeDGButton_Click(object sender, EventArgs e)
         {
             grid1_to_grid0(dataGridView1, dataGridView0);
@@ -352,11 +232,8 @@ namespace photolog
         }
 
 
-
-
-
-    // BUTTON - CreateWordDoc
-    private void button3_Click(object sender, EventArgs e)
+        // BUTTON - Publish Word document
+        private void button3_Click(object sender, EventArgs e)
         {
             //SaveFileDialog sfd = new SaveFileDialog();
             //sfd.Filter = "Word Documents (*.docx)|*.docx";
@@ -365,7 +242,6 @@ namespace photolog
             {
                 //CreateWordDoc(dataGridView1, sfd.FileName);              
                 CreateWordDoc(dataGridView1);
-                //MessageBox.Show("Creating You Word Document \nPlease Wait!");
             }
         }
 
@@ -377,6 +253,7 @@ namespace photolog
             {
                 //Create a missing variable for missing value
                 object oMissing = Missing.Value;
+                
                 // \endofdoc is a predefined bookmark
                 object oEndOfDoc = "\\endofdoc";
 
@@ -442,41 +319,12 @@ namespace photolog
         }
 
 
-        // Create Datable of ListView
-        //private System.Data.DataTable GetDataTableFromLV(ListView lv)
-        //{
-        //    System.Data.DataTable dt1 = new System.Data.DataTable();
-        //    dt1.Columns.Add("listView1Path", typeof(string));
-        //    dt1.Columns.Add("listView1ImageNumber", typeof(string));
-
-        //    object[] cellValues1 = new object[lv.Columns.Count];
-        //    foreach (ListViewItem item in lv.Items)
-        //    {
-        //        for (int i = 0; i < item.SubItems.Count; i++)
-        //        {
-        //            cellValues1[i] = item.SubItems[i].Text;
-        //        }
-        //        dt1.Rows.Add(cellValues1);
-        //    }
-        //    return dt1;
-        //}
-        
-            
-            
-            // Create single variable for parent folder
-        //private System.Data.DataTable GetDataTableFromFolder()
-        //{
-        //    System.Data.DataTable dt0 = new System.Data.DataTable();
-        //    dt0.Columns.Add("parentFolder", typeof(string));
-        //    dt0.Rows.Add(StringA);
-        //    return dt0;
-        //}
-
         // Create Datable of datagridViewView0
         private System.Data.DataTable GetDataTableFromDGV0(DataGridView dgv)
         {
             System.Data.DataTable dt1 = new System.Data.DataTable();
             dt1.Columns.Add("dataGridView0Bitmap", typeof(string));
+            dt1.Columns.Add("dataGridView0Caption", typeof(string));
             dt1.Columns.Add("dataGridView0Path", typeof(string));
 
             object[] cellValues1 = new object[dgv.Columns.Count];
@@ -498,7 +346,7 @@ namespace photolog
             dt2.Columns.Add("dataGridView1Bitmap", typeof(string));
             dt2.Columns.Add("dataGridView1Caption", typeof(string));
             dt2.Columns.Add("dataGridView1Path", typeof(string));
-            dt2.Columns.Add("dataGridView1ImageNumber", typeof(string));
+            //dt2.Columns.Add("dataGridView1ImageNumber", typeof(string));
 
             object[] cellValues2 = new object[dgv.Columns.Count];
             foreach (DataGridViewRow row in dgv.Rows)
@@ -513,33 +361,28 @@ namespace photolog
         }
 
 
-
-
-        // BUTTON - save method
+        // MENU - Save project
         private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataSet dS = new DataSet();
-            //System.Data.DataTable dT0 = GetDataTableFromFolder();
             System.Data.DataTable dT1 = GetDataTableFromDGV0(dataGridView0);
             System.Data.DataTable dT2 = GetDataTableFromDGV1(dataGridView1);
 
-            //dS.Tables.Add(dT0);
             dS.Tables.Add(dT1);
             dS.Tables.Add(dT2);
-            
-            // Console.WriteLine(dT1);
-            // Save a single variable... Filepath
-            // String directoryPath = Path.GetDirectoryName();
+
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*";
             saveFileDialog.Title = "Save work as .XML file";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                dS.WriteXml(File.Open(saveFileDialog.FileName, FileMode.CreateNew));
+                dS.WriteXml(File.Open(saveFileDialog.FileName, FileMode.Create));
             }
         }
 
+
+        // MENU - Resume project
         private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -555,86 +398,35 @@ namespace photolog
             // check user selects pass
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                //Console.WriteLine("This {0}", ofd.FileName.ToString());
-                //Console.WriteLine("This {0}", ofd.FileName);
                 string xmlFileName = ofd.FileName;
 
-                //string fileName = Path.GetFileName(path);
                 Console.WriteLine(xmlFileName);
-                //Console.WriteLine(StringA);
 
-                //listView1.Items.Clear();
                 XDocument doc = XDocument.Load(xmlFileName);
                 //Console.WriteLine(doc);
 
-                // IMGLISTS TO HOLD IMAGES
-                //ImageList imgList1 = new ImageList();
-                //imgList1.ColorDepth = ColorDepth.Depth16Bit;
-                //imgList1.ImageSize = new Size(150, 150);
-                //listView1.SmallImageList = imgList1;
-
-                // Add required columns
-                //listView1.Columns.Add("listView1Path");
-                //listView1.Columns.Add("listView1ImageNumber");
-                //string parentFolder = doc.Element("parentFolder").Value;
-                //Console.WriteLine(parentFolder);
-                //foreach (var dm0 in doc.Descendants("Table1"))
-                //{
-                //    string parentFolder = dm0.Element("parentFolder").Value;
-                //}
-
-
-                //string[] files = Directory.GetFiles(@"C:\Users\dhaggerty\Desktop\images");
-                //List<int> eyes = new List<int>();
-                //List<string> pics = new List<string>();
-                //foreach (var dm1 in doc.Descendants("Table2"))
-                //{
-                //    //int eye = Int32.Parse(dm1.Element("listView1ImageNumber").Value);
-                //    eyes.Add(Int32.Parse(dm1.Element("listView1ImageNumber").Value));
-                //    pics.Add(dm1.Element("listView1Path").Value);
-                //}
-                //eyes.ForEach(Console.WriteLine);
-                //pics.ForEach(Console.WriteLine);
-
-                //int iii = 0;
-                //foreach (var nw in pics.Zip(eyes, Tuple.Create))
-                //{
-                //    Console.WriteLine(nw.Item1 + " " + nw.Item2 + " " + iii.ToString());
-                //    ListViewItem item = new ListViewItem(nw.Item1, iii);
-                //    Image newImage = Image.FromFile(nw.Item1);
-                //    imgList1.Images.Add(newImage);
-                //    item.SubItems.Add(nw.Item2.ToString());
-                //    listView1.Items.Add(item);
-                //    iii++;
-
-                //}
-
                 foreach (var dm1 in doc.Descendants("Table1"))
                 {
-                    //imgList1.Images.Add(Image.FromFile(files[i]));
-                    //var img = dm2.Element("dataGridView1Bitmap").Value;
                     Image img = Image.FromFile(dm1.Element("dataGridView0Path").Value.ToString());
-                    //var capt = dm2.Element("dataGridView1Caption").Value;
                     var pth = dm1.Element("dataGridView0Path").Value;
-                    //var ind = dm2.Element("dataGridView1ImageNumber").Value;
-                    //dataGridView1.Rows.Add(img, capt, pth, ind);
-                    dataGridView0.Rows.Add(img, pth);
+                    dataGridView0.Rows.Add(img, "", pth);
                 }
 
                 foreach (var dm2 in doc.Descendants("Table2"))
                 {
-                    //imgList1.Images.Add(Image.FromFile(files[i]));
-                    //var img = dm2.Element("dataGridView1Bitmap").Value;
                     Image img = Image.FromFile(dm2.Element("dataGridView1Path").Value.ToString());
                     var capt = dm2.Element("dataGridView1Caption").Value;
                     var pth = dm2.Element("dataGridView1Path").Value;
-                    //var ind = dm2.Element("dataGridView1ImageNumber").Value;
-                    //dataGridView1.Rows.Add(img, capt, pth, ind);
                     dataGridView1.Rows.Add(img, capt, pth);
                 }
             }
         }
 
+        private void readMeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Launch browser to facebook...
+            System.Diagnostics.Process.Start("https://github.com/danhagg/photolog_dataGrid");
+        }
     }
 }
 

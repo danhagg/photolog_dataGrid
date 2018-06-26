@@ -28,21 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addDGButton = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readDocsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.upButton = new System.Windows.Forms.Button();
             this.downButton = new System.Windows.Forms.Button();
             this.removeDGButton = new System.Windows.Forms.Button();
@@ -53,71 +49,38 @@
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridView0 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.capt0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView0)).BeginInit();
             this.SuspendLayout();
             // 
-            // listView1
-            // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.listView1.Location = new System.Drawing.Point(12, 27);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(96, 796);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "";
-            this.columnHeader1.Width = 150;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Width = 100;
-            // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.imageColumn,
             this.Caption,
             this.FilePath});
-            this.dataGridView1.Location = new System.Drawing.Point(556, 27);
+            this.dataGridView1.Location = new System.Drawing.Point(295, 27);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(534, 796);
+            this.dataGridView1.Size = new System.Drawing.Size(562, 796);
             this.dataGridView1.TabIndex = 11;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // imageColumn
-            // 
-            this.imageColumn.HeaderText = "Image";
-            this.imageColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
-            this.imageColumn.Name = "imageColumn";
-            this.imageColumn.Width = 150;
-            // 
-            // Caption
-            // 
-            this.Caption.HeaderText = "Caption";
-            this.Caption.MaxInputLength = 220;
-            this.Caption.Name = "Caption";
-            this.Caption.Width = 350;
-            // 
-            // FilePath
-            // 
-            this.FilePath.HeaderText = "FilePath";
-            this.FilePath.Name = "FilePath";
-            this.FilePath.ReadOnly = true;
-            this.FilePath.Visible = false;
             // 
             // addDGButton
             // 
             this.addDGButton.BackColor = System.Drawing.Color.ForestGreen;
-            this.addDGButton.Location = new System.Drawing.Point(492, 29);
+            this.addDGButton.Location = new System.Drawing.Point(231, 36);
             this.addDGButton.Name = "addDGButton";
             this.addDGButton.Size = new System.Drawing.Size(58, 23);
             this.addDGButton.TabIndex = 12;
@@ -127,7 +90,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(491, 201);
+            this.button3.Location = new System.Drawing.Point(230, 208);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(59, 23);
             this.button3.TabIndex = 15;
@@ -138,10 +101,11 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.readDocsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1035, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(875, 24);
             this.menuStrip1.TabIndex = 16;
             this.menuStrip1.Text = "File";
             // 
@@ -149,8 +113,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.resumeToolStripMenuItem,
-            this.saveProjectToolStripMenuItem});
+            this.saveProjectToolStripMenuItem,
+            this.resumeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -158,27 +122,42 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.openToolStripMenuItem.Text = "Open Folder";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.openToolStripMenuItem.Text = "New project";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
-            // resumeToolStripMenuItem
-            // 
-            this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
-            this.resumeToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.resumeToolStripMenuItem.Text = "Resume project";
-            this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
             // 
             // saveProjectToolStripMenuItem
             // 
             this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.saveProjectToolStripMenuItem.Text = "Save project";
+            this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.saveProjectToolStripMenuItem.Text = "Save current project";
             this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
+            // 
+            // resumeToolStripMenuItem
+            // 
+            this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
+            this.resumeToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.resumeToolStripMenuItem.Text = "Resume project";
+            this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
+            // 
+            // readDocsToolStripMenuItem
+            // 
+            this.readDocsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readMeToolStripMenuItem});
+            this.readDocsToolStripMenuItem.Name = "readDocsToolStripMenuItem";
+            this.readDocsToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.readDocsToolStripMenuItem.Text = "Read docs";
+            // 
+            // readMeToolStripMenuItem
+            // 
+            this.readMeToolStripMenuItem.Name = "readMeToolStripMenuItem";
+            this.readMeToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.readMeToolStripMenuItem.Text = "Read me";
+            this.readMeToolStripMenuItem.Click += new System.EventHandler(this.readMeToolStripMenuItem_Click);
             // 
             // upButton
             // 
-            this.upButton.Location = new System.Drawing.Point(492, 114);
+            this.upButton.Location = new System.Drawing.Point(231, 121);
             this.upButton.Name = "upButton";
             this.upButton.Size = new System.Drawing.Size(58, 23);
             this.upButton.TabIndex = 17;
@@ -188,7 +167,7 @@
             // 
             // downButton
             // 
-            this.downButton.Location = new System.Drawing.Point(492, 144);
+            this.downButton.Location = new System.Drawing.Point(231, 151);
             this.downButton.Name = "downButton";
             this.downButton.Size = new System.Drawing.Size(58, 23);
             this.downButton.TabIndex = 18;
@@ -199,7 +178,7 @@
             // removeDGButton
             // 
             this.removeDGButton.BackColor = System.Drawing.Color.Red;
-            this.removeDGButton.Location = new System.Drawing.Point(492, 59);
+            this.removeDGButton.Location = new System.Drawing.Point(231, 66);
             this.removeDGButton.Name = "removeDGButton";
             this.removeDGButton.Size = new System.Drawing.Size(58, 23);
             this.removeDGButton.TabIndex = 19;
@@ -253,34 +232,63 @@
             this.dataGridView0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView0.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
+            this.capt0,
             this.Column2});
-            this.dataGridView0.Location = new System.Drawing.Point(115, 27);
+            this.dataGridView0.Location = new System.Drawing.Point(12, 27);
             this.dataGridView0.Name = "dataGridView0";
             this.dataGridView0.ShowRowErrors = false;
-            this.dataGridView0.Size = new System.Drawing.Size(299, 435);
+            this.dataGridView0.Size = new System.Drawing.Size(212, 796);
             this.dataGridView0.TabIndex = 25;
-            this.dataGridView0.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView0_CellContentClick);
             this.dataGridView0.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView0_CellContentDoubleClick);
             // 
             // Column1
             // 
-            this.Column1.HeaderText = "Column1";
+            this.Column1.HeaderText = "Image";
             this.Column1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
             this.Column1.Name = "Column1";
             this.Column1.Width = 150;
             // 
+            // capt0
+            // 
+            this.capt0.HeaderText = "capt0";
+            this.capt0.Name = "capt0";
+            this.capt0.Visible = false;
+            // 
             // Column2
             // 
-            this.Column2.HeaderText = "Column2";
+            this.Column2.HeaderText = "pth0";
             this.Column2.Name = "Column2";
             this.Column2.Visible = false;
+            // 
+            // imageColumn
+            // 
+            this.imageColumn.HeaderText = "Image";
+            this.imageColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
+            this.imageColumn.Name = "imageColumn";
+            this.imageColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.imageColumn.Width = 150;
+            // 
+            // Caption
+            // 
+            this.Caption.HeaderText = "Caption";
+            this.Caption.MaxInputLength = 220;
+            this.Caption.Name = "Caption";
+            this.Caption.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Caption.Width = 350;
+            // 
+            // FilePath
+            // 
+            this.FilePath.HeaderText = "FilePath";
+            this.FilePath.Name = "FilePath";
+            this.FilePath.ReadOnly = true;
+            this.FilePath.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1035, 835);
+            this.ClientSize = new System.Drawing.Size(875, 835);
             this.Controls.Add(this.dataGridView0);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox2);
@@ -293,7 +301,6 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.addDGButton);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.listView1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
             this.Text = "Photo Log";
@@ -308,8 +315,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button addDGButton;
@@ -320,8 +325,6 @@
         private System.Windows.Forms.Button upButton;
         private System.Windows.Forms.Button downButton;
         private System.Windows.Forms.Button removeDGButton;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -330,7 +333,10 @@
         private System.Windows.Forms.ToolStripMenuItem resumeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProjectToolStripMenuItem;
         private System.Windows.Forms.DataGridView dataGridView0;
+        private System.Windows.Forms.ToolStripMenuItem readDocsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem readMeToolStripMenuItem;
         private System.Windows.Forms.DataGridViewImageColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn capt0;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewImageColumn imageColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Caption;
