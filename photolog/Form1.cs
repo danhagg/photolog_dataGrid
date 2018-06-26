@@ -8,9 +8,6 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Data;
 using System.Xml.Linq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing.Drawing2D;
 
 namespace photolog
 {
@@ -29,6 +26,7 @@ namespace photolog
         // Set Form listView and datGridView properties on load
         private void Form1_Load(object sender, EventArgs e)
         {
+
             // listView1 PROPERTIES... Details, List, Tiles
             listView1.View = System.Windows.Forms.View.Details;
             //listView1.View = System.Windows.Forms.View.Tile;
@@ -50,10 +48,9 @@ namespace photolog
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         }
 
-        //enum MyEnum
-        //{
+       
 
-        //}
+        
 
         // BUTTON - Open Folder
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -106,7 +103,8 @@ namespace photolog
                     
                     Object[] row = new object[] {img, fileNameFull };
                     dataGridView0.Rows.Add(row);
-
+                    Console.WriteLine(img);
+   
 
                     ListViewItem item = new ListViewItem(fileNameFull, i);
                     imgList1.Images.Add(Image.FromFile(files[i]));
@@ -119,7 +117,7 @@ namespace photolog
         }
 
 
-        // calculate listView Length
+        // calculate dataGridView1 Length
         private void dgLength()
         {
             int dgRows = dataGridView1.Rows.Count;
@@ -128,7 +126,7 @@ namespace photolog
         }
 
 
-        // calculate listView Length
+        // calculate caption Length
         private void capLength()
         {
             if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
@@ -165,6 +163,8 @@ namespace photolog
         }
 
 
+
+
         // View Full-size Image - dataGridView
         private void dataGridView0_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -179,6 +179,25 @@ namespace photolog
                 MessageBox.Show("No Item is selected");
             }
         }
+
+
+
+        private void dataGridView0_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            String txt = dataGridView0.CurrentRow.Cells[1].Value.ToString();
+            if (txt != null)
+            {
+                string fName = Path.GetFileName(txt);
+                System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
+                ToolTip1.Show("yo", dataGridView0);
+            }
+            else
+            {
+                MessageBox.Show("No Item is selected");
+            }
+        }
+
+
 
         private void listView1_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
@@ -422,29 +441,58 @@ namespace photolog
             }
         }
 
-        
+
         // Create Datable of ListView
-        private System.Data.DataTable GetDataTableFromLV(ListView lv)
+        //private System.Data.DataTable GetDataTableFromLV(ListView lv)
+        //{
+        //    System.Data.DataTable dt1 = new System.Data.DataTable();
+        //    dt1.Columns.Add("listView1Path", typeof(string));
+        //    dt1.Columns.Add("listView1ImageNumber", typeof(string));
+
+        //    object[] cellValues1 = new object[lv.Columns.Count];
+        //    foreach (ListViewItem item in lv.Items)
+        //    {
+        //        for (int i = 0; i < item.SubItems.Count; i++)
+        //        {
+        //            cellValues1[i] = item.SubItems[i].Text;
+        //        }
+        //        dt1.Rows.Add(cellValues1);
+        //    }
+        //    return dt1;
+        //}
+        
+            
+            
+            // Create single variable for parent folder
+        //private System.Data.DataTable GetDataTableFromFolder()
+        //{
+        //    System.Data.DataTable dt0 = new System.Data.DataTable();
+        //    dt0.Columns.Add("parentFolder", typeof(string));
+        //    dt0.Rows.Add(StringA);
+        //    return dt0;
+        //}
+
+        // Create Datable of datagridViewView0
+        private System.Data.DataTable GetDataTableFromDGV0(DataGridView dgv)
         {
             System.Data.DataTable dt1 = new System.Data.DataTable();
-            dt1.Columns.Add("listView1Path", typeof(string));
-            dt1.Columns.Add("listView1ImageNumber", typeof(string));
+            dt1.Columns.Add("dataGridView0Bitmap", typeof(string));
+            dt1.Columns.Add("dataGridView0Path", typeof(string));
 
-            object[] cellValues1 = new object[lv.Columns.Count];
-            foreach (ListViewItem item in lv.Items)
+            object[] cellValues1 = new object[dgv.Columns.Count];
+            foreach (DataGridViewRow row in dgv.Rows)
             {
-                for (int i = 0; i < item.SubItems.Count; i++)
+                for (int ii = 0; ii < row.Cells.Count; ii++)
                 {
-                    cellValues1[i] = item.SubItems[i].Text;
+                    cellValues1[ii] = row.Cells[ii].Value;
                 }
                 dt1.Rows.Add(cellValues1);
             }
             return dt1;
         }
 
-
-        // Create Datable of datagridViewView
-        private System.Data.DataTable GetDataTableFromDGV(DataGridView dgv)
+        // Create Datable of datagridViewView1
+        private System.Data.DataTable GetDataTableFromDGV1(DataGridView dgv)
         {
             System.Data.DataTable dt2 = new System.Data.DataTable();
             dt2.Columns.Add("dataGridView1Bitmap", typeof(string));
@@ -464,25 +512,18 @@ namespace photolog
             return dt2;
         }
 
-        // Create single variable for parent folder
-        private System.Data.DataTable GetDataTableFromFolder()
-        {
-            System.Data.DataTable dt0 = new System.Data.DataTable();
-            dt0.Columns.Add("parentFolder", typeof(string));
-            dt0.Rows.Add(StringA);         
-            return dt0;
-        }
+
 
 
         // BUTTON - save method
         private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataSet dS = new DataSet();
-            System.Data.DataTable dT0 = GetDataTableFromFolder();
-            System.Data.DataTable dT1 = GetDataTableFromLV(listView1);
-            System.Data.DataTable dT2 = GetDataTableFromDGV(dataGridView1);
+            //System.Data.DataTable dT0 = GetDataTableFromFolder();
+            System.Data.DataTable dT1 = GetDataTableFromDGV0(dataGridView0);
+            System.Data.DataTable dT2 = GetDataTableFromDGV1(dataGridView1);
 
-            dS.Tables.Add(dT0);
+            //dS.Tables.Add(dT0);
             dS.Tables.Add(dT1);
             dS.Tables.Add(dT2);
             
@@ -522,15 +563,15 @@ namespace photolog
                 Console.WriteLine(xmlFileName);
                 //Console.WriteLine(StringA);
 
-                listView1.Items.Clear();
+                //listView1.Items.Clear();
                 XDocument doc = XDocument.Load(xmlFileName);
                 //Console.WriteLine(doc);
 
                 // IMGLISTS TO HOLD IMAGES
-                ImageList imgList1 = new ImageList();
-                imgList1.ColorDepth = ColorDepth.Depth16Bit;
-                imgList1.ImageSize = new Size(150, 150);
-                listView1.SmallImageList = imgList1;
+                //ImageList imgList1 = new ImageList();
+                //imgList1.ColorDepth = ColorDepth.Depth16Bit;
+                //imgList1.ImageSize = new Size(150, 150);
+                //listView1.SmallImageList = imgList1;
 
                 // Add required columns
                 //listView1.Columns.Add("listView1Path");
@@ -543,44 +584,57 @@ namespace photolog
                 //}
 
 
-                string[] files = Directory.GetFiles(@"C:\Users\dhaggerty\Desktop\images");
-                List<int> eyes = new List<int>();
-                List<string> pics = new List<string>();
-                foreach (var dm1 in doc.Descendants("Table2"))
-                {
-                    //int eye = Int32.Parse(dm1.Element("listView1ImageNumber").Value);
-                    eyes.Add(Int32.Parse(dm1.Element("listView1ImageNumber").Value));
-                    pics.Add(dm1.Element("listView1Path").Value);
-                }
+                //string[] files = Directory.GetFiles(@"C:\Users\dhaggerty\Desktop\images");
+                //List<int> eyes = new List<int>();
+                //List<string> pics = new List<string>();
+                //foreach (var dm1 in doc.Descendants("Table2"))
+                //{
+                //    //int eye = Int32.Parse(dm1.Element("listView1ImageNumber").Value);
+                //    eyes.Add(Int32.Parse(dm1.Element("listView1ImageNumber").Value));
+                //    pics.Add(dm1.Element("listView1Path").Value);
+                //}
                 //eyes.ForEach(Console.WriteLine);
                 //pics.ForEach(Console.WriteLine);
 
-                int iii = 0;
-                foreach (var nw in pics.Zip(eyes, Tuple.Create))
+                //int iii = 0;
+                //foreach (var nw in pics.Zip(eyes, Tuple.Create))
+                //{
+                //    Console.WriteLine(nw.Item1 + " " + nw.Item2 + " " + iii.ToString());
+                //    ListViewItem item = new ListViewItem(nw.Item1, iii);
+                //    Image newImage = Image.FromFile(nw.Item1);
+                //    imgList1.Images.Add(newImage);
+                //    item.SubItems.Add(nw.Item2.ToString());
+                //    listView1.Items.Add(item);
+                //    iii++;
+
+                //}
+
+                foreach (var dm1 in doc.Descendants("Table1"))
                 {
-                    Console.WriteLine(nw.Item1 + " " + nw.Item2 + " " + iii.ToString());
-                    ListViewItem item = new ListViewItem(nw.Item1, iii);
-                    Image newImage = Image.FromFile(nw.Item1);
-                    imgList1.Images.Add(newImage);
-                    item.SubItems.Add(nw.Item2.ToString());
-                    listView1.Items.Add(item);
-                    iii++;
- 
+                    //imgList1.Images.Add(Image.FromFile(files[i]));
+                    //var img = dm2.Element("dataGridView1Bitmap").Value;
+                    Image img = Image.FromFile(dm1.Element("dataGridView0Path").Value.ToString());
+                    //var capt = dm2.Element("dataGridView1Caption").Value;
+                    var pth = dm1.Element("dataGridView0Path").Value;
+                    //var ind = dm2.Element("dataGridView1ImageNumber").Value;
+                    //dataGridView1.Rows.Add(img, capt, pth, ind);
+                    dataGridView0.Rows.Add(img, pth);
                 }
 
-                foreach (var dm2 in doc.Descendants("Table3"))
+                foreach (var dm2 in doc.Descendants("Table2"))
                 {
                     //imgList1.Images.Add(Image.FromFile(files[i]));
                     //var img = dm2.Element("dataGridView1Bitmap").Value;
                     Image img = Image.FromFile(dm2.Element("dataGridView1Path").Value.ToString());
                     var capt = dm2.Element("dataGridView1Caption").Value;
                     var pth = dm2.Element("dataGridView1Path").Value;
-                    var ind = dm2.Element("dataGridView1ImageNumber").Value;
-                    dataGridView1.Rows.Add(img, capt, pth, ind);
-                    //dataGridView1.Rows.Add(img, capt, pth);
+                    //var ind = dm2.Element("dataGridView1ImageNumber").Value;
+                    //dataGridView1.Rows.Add(img, capt, pth, ind);
+                    dataGridView1.Rows.Add(img, capt, pth);
                 }
             }
         }
+
     }
 }
 

@@ -33,6 +33,9 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addDGButton = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -51,9 +54,6 @@
             this.dataGridView0 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.imageColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Caption = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView0)).BeginInit();
@@ -92,6 +92,27 @@
             this.dataGridView1.Size = new System.Drawing.Size(534, 796);
             this.dataGridView1.TabIndex = 11;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // imageColumn
+            // 
+            this.imageColumn.HeaderText = "Image";
+            this.imageColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
+            this.imageColumn.Name = "imageColumn";
+            this.imageColumn.Width = 150;
+            // 
+            // Caption
+            // 
+            this.Caption.HeaderText = "Caption";
+            this.Caption.MaxInputLength = 220;
+            this.Caption.Name = "Caption";
+            this.Caption.Width = 350;
+            // 
+            // FilePath
+            // 
+            this.FilePath.HeaderText = "FilePath";
+            this.FilePath.Name = "FilePath";
+            this.FilePath.ReadOnly = true;
+            this.FilePath.Visible = false;
             // 
             // addDGButton
             // 
@@ -238,6 +259,7 @@
             this.dataGridView0.ShowRowErrors = false;
             this.dataGridView0.Size = new System.Drawing.Size(299, 435);
             this.dataGridView0.TabIndex = 25;
+            this.dataGridView0.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView0_CellContentClick);
             this.dataGridView0.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView0_CellContentDoubleClick);
             // 
             // Column1
@@ -252,27 +274,6 @@
             this.Column2.HeaderText = "Column2";
             this.Column2.Name = "Column2";
             this.Column2.Visible = false;
-            // 
-            // imageColumn
-            // 
-            this.imageColumn.HeaderText = "Image";
-            this.imageColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
-            this.imageColumn.Name = "imageColumn";
-            this.imageColumn.Width = 150;
-            // 
-            // Caption
-            // 
-            this.Caption.HeaderText = "Caption";
-            this.Caption.MaxInputLength = 220;
-            this.Caption.Name = "Caption";
-            this.Caption.Width = 350;
-            // 
-            // FilePath
-            // 
-            this.FilePath.HeaderText = "FilePath";
-            this.FilePath.Name = "FilePath";
-            this.FilePath.ReadOnly = true;
-            this.FilePath.Visible = false;
             // 
             // Form1
             // 
