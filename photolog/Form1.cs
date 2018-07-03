@@ -37,12 +37,16 @@ namespace photolog
             MaximizeBox = false;
 
             // DataGridView0
-            dataGridView0.RowTemplate.Height = 250;
+            dataGridView0.RowTemplate.Height = 100;
             dataGridView0.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView0.AllowUserToAddRows = false;
             dataGridView0.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dataGridView0.Columns[1].DefaultCellStyle.Font = new System.Drawing.Font("Verdana", 20F, FontStyle.Bold);
-            
+            dataGridView0.Columns[1].DefaultCellStyle.Font = new System.Drawing.Font("Verdana", 10F, FontStyle.Bold);
+            dataGridView0.GridColor = SystemColors.ActiveBorder;
+            dataGridView0.MultiSelect = false;
+
+
+
             // Here we attach an event handler to the cell painting event
             dataGridView0.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView0_CellPainting);
             dataGridView1.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
@@ -51,9 +55,9 @@ namespace photolog
             dataGridView1.RowTemplate.Height = 250;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
-            //dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dataGridView1.Columns[1].DefaultCellStyle.Font = new System.Drawing.Font("Verdana", 20F, FontStyle.Bold);
+            dataGridView1.Columns[1].DefaultCellStyle.Font = new System.Drawing.Font("Verdana", 16F, FontStyle.Bold);
+            dataGridView1.Columns[2].DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 12F);
         }
 
 
@@ -86,9 +90,11 @@ namespace photolog
                     string fileNameFull = Path.GetFullPath(files[i]);
 
                     string fileNam = Path.GetFileNameWithoutExtension(files[i]);
-                    Image img = Image.FromFile(fileNameFull);
-
-                    Object[] row = new object[] { fileNam, img, "", fileNameFull };
+                    //Image img = Image.FromFile(fileNameFull);
+                    Bitmap bmp1 = new Bitmap(fileNameFull);
+                  
+                    //Object[] row = new object[] { fileNam, img, "", fileNameFull };
+                    Object[] row = new object[] { fileNam, bmp1, "", fileNameFull };
                     dataGridView0.Rows.Add(row);
                 }
             }
@@ -120,7 +126,7 @@ namespace photolog
                     sb.AppendLine();
                     MessageBox.Show(sb.ToString());
                 }
-                if (pos1 > -1)
+                else if (pos1 > -1)
                 {
                     StringBuilder sb = new StringBuilder("The following file is already in the right-hand list: ");
                     sb.AppendLine();
@@ -132,7 +138,7 @@ namespace photolog
                 {
                     string fileNam = Path.GetFileNameWithoutExtension(fileNames[0]);
                     Image img = Image.FromFile(fileNameFull);
-                    Object[] row = new object[] { fileNam, img, "", fileNameFull };
+                    Object[] row = new object[] { fileNam, img, "Insert caption here", fileNameFull };
                     dataGridView0.Rows.Add(row);
                 }
             }
@@ -151,6 +157,7 @@ namespace photolog
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            ofd.Title = "Drag Images into Assembly Line";
             ofd.ShowDialog();
         }
 
@@ -167,7 +174,7 @@ namespace photolog
                 e.PaintContent(e.ClipBounds);
 
                 // calculate the location of your text..:
-                int y = e.CellBounds.Bottom - 35;         // your  font height
+                int y = e.CellBounds.Bottom - 20;         // your  font height
                 e.Graphics.DrawString(dataGridView0.Rows[e.RowIndex].Cells[0].Value.ToString(), e.CellStyle.Font,
                 Brushes.Crimson, e.CellBounds.Left, y);
                 e.Handled = true;                        // done with the image column 
@@ -225,6 +232,7 @@ namespace photolog
         private void dataGridView0_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             String txt = dataGridView0.CurrentRow.Cells[3].Value.ToString();
+            Console.WriteLine(txt);
             if (txt != null)
             {
                 Image newImage = Image.FromFile(txt);
@@ -241,6 +249,7 @@ namespace photolog
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             String txt = dataGridView1.CurrentRow.Cells[3].Value.ToString();
+            Console.WriteLine(txt);
             if (txt != null)
             {
                 Image newImage = Image.FromFile(txt);
@@ -557,7 +566,7 @@ namespace photolog
             using (Bitmap bmp1 = new Bitmap(@"C:\TestPhoto.jpg"))
             {
                 ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
+                
                 // Create an Encoder object based on the GUID  
                 // for the Quality parameter category.  
                 System.Drawing.Imaging.Encoder myEncoder =
@@ -604,6 +613,12 @@ namespace photolog
         private void button1_Click(object sender, EventArgs e)
         {
             VaryQualityLevel();
+        }
+
+        private void readDocsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // Launch browser to facebook...
+            System.Diagnostics.Process.Start("https://github.com/danhagg/photolog_dataGrid");
         }
 
     }
